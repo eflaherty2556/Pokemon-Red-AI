@@ -15,6 +15,16 @@
 		{
 			"address": 53625,
 			"type": ">=i4"
+		},
+		"xPosOverworld":
+		{
+			"address": 54114,
+			"type": "|i1"
+		},
+		"yPosOverworld":
+		{
+			"address": 54113,
+			"type": "|i1"
 		}
 	}
 }
