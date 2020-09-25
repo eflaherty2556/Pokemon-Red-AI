@@ -1,0 +1,20 @@
+{
+	"info": 
+	{
+		"party_size": 
+		{
+			"address": 53603,
+			"type": "|i1"
+		},
+		"money": 
+		{
+			"address": 54087,
+			"type": "<d2"
+		},
+		"totalExpPkmn1":
+		{
+			"address": 53625,
+			"type": ">=i4"
+		}
+	}
+}
