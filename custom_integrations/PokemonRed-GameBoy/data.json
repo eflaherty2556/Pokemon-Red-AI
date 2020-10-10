@@ -25,6 +25,11 @@
 		{
 			"address": 54113,
 			"type": "|i1"
+		},
+		"mapID":
+		{
+			"address": 54109,
+			"type": ">d2"
 		}
 	}
 }

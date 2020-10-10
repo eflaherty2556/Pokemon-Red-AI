@@ -24,13 +24,13 @@ def main():
         
         # print(env.action_space)
 
-        env = make_vec_env(lambda: env, n_envs=4)
+        vec_env = make_vec_env(lambda: env, n_envs=4)
         # time.sleep(3)    
 
-        model = A2C(MlpPolicy, env, verbose=1)
+        model = A2C(MlpPolicy, vec_env, verbose=1)
 
         start_time = time.time()
-        model.learn(total_timesteps=5000)
+        model.learn(total_timesteps=20000)
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
         
         obs = env.reset()
