@@ -36,7 +36,7 @@ def train_model(n_vec = 4, time_steps = 2000):
         model.save("a2c_model_pkmn")
 
 def main():
-     train_model(n_vec=6, time_steps=1000000)   
+     train_model(n_vec=8, time_steps=500000)   
 
     
 if __name__ == "__main__":

@@ -29,30 +29,32 @@ previous_xPos = 0
 previous_yPos = 0
 movement_counter = 0
 movement_counter_limit = 90
+min_movement_delta = 4
 
+--Initalize table
 visitedMaps = {}
 
+
 function moneyReward()
-	return (data.money - previous_money) * 0.25
+	return (data.money - previous_money) * 1.0
 end
 
 function partyReward()
-	return (data.party_size - previous_party_size) * 100
+	return (data.party_size - previous_party_size) * 200
 end
 
 function pkmn1XPReward()
-	return (data.totalExpPkmn1 - previous_pkmn1_exp) * 5.0
+	return (data.totalExpPkmn1 - previous_pkmn1_exp) * 15.0
 end
 
 function overworldMovementReward()
-	final_reward = 0
-	if (data.xPosOverworld ~= previous_xPos or data.yPosOverworld ~= previous_yPos) then
+	if (movementDeltaWithinRange(data.xPosOverworld, previous_xPos) or movementDeltaWithinRange(data.yPosOverworld, previous_yPos)) then
 		previous_xPos = data.xPosOverworld
 		previous_yPos = data.yPosOverworld
 		movement_counter = 0
 	elseif movement_counter > movement_counter_limit then
 		movement_counter = movement_counter + 1
-		final_reward = -15
+		final_reward = -500
 	else
 		movement_counter = movement_counter + 1
 	end
@@ -60,12 +62,18 @@ function overworldMovementReward()
 	return final_reward
 end
 
+function movementDeltaWithinRange(current_pos, last_pos)
+	pos_delta = math.abs(current_pos - last_pos)
+
+	return pos_delta > min_movement_delta
+end
+
 function explorationReward()
 	final_reward = 0
 	if setContains(visitedMaps, data.mapID) then
 		print("Exploring a new map!")
 		addToSet(visitedMaps, data.mapID)
-		final_reward = 200
+		final_reward = 300
 	end
 
 	return final_reward
