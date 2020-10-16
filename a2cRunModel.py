@@ -25,12 +25,18 @@ def main():
         # print(env.action_space)
 
         model = A2C.load("a2c_model_pkmn")
+
+        initial_time = time.time()
         
         obs = env.reset()
         while True:
             action, _states = model.predict(obs)
             obs, rewards, dones, info = env.step(action)
             env.render()
+            time_delta = int(time.time() - initial_time)
+            if time_delta == 1:
+                    print(rewards)
+                    initial_time = time.time()
 
         env.close()
 
