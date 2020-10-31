@@ -19,7 +19,7 @@ def main():
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
+        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, record='.') #, use_restricted_actions=retro.Actions.DISCRETE
         print(env)
         
         # print(env.action_space)
@@ -30,7 +30,9 @@ def main():
         while True:
             action, _states = model.predict(obs)
             obs, rewards, dones, info = env.step(action)
-            env.render()
+            #env.render()
+            if dones:
+                    break
 
         env.close()
 
