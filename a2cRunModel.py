@@ -34,10 +34,7 @@ def main():
             obs, rewards, dones, info = env.step(action)
             #env.render()
             time_delta = int(time.time() - initial_time)
-            if time_delta == 1:
-                    print(rewards)
-                    initial_time = time.time()
-            if dones:
+            if dones or time_delta >= 120:
                     break
                 
 
