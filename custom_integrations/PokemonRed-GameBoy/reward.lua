@@ -7,18 +7,18 @@ function progress()
 	final_reward = final_reward + pkmn1XPReward()
 	final_reward = final_reward + overworldMovementReward()
 	final_reward = final_reward + explorationReward()
-	
+	final_reward = final_reward + timePunishment()
+
 	return final_reward
 end
 
 function done_check()
 	-- finish once 2 pokemon are obtained
-	if data.party_size == 2 then
+	if data.party_size == 1 then
 		return true
 	end
 	return false
 end
-
 
 --reward functions
 previous_money = 3000
@@ -33,15 +33,15 @@ movement_counter_limit = 90
 visitedMaps = {}
 
 function moneyReward()
-	return (data.money - previous_money) * 0.25
+	return (data.money - previous_money) * 0.0005
 end
 
 function partyReward()
-	return (data.party_size - previous_party_size) * 100
+	return (data.party_size - previous_party_size) * 1000
 end
 
 function pkmn1XPReward()
-	return (data.totalExpPkmn1 - previous_pkmn1_exp) * 5.0
+	return (data.totalExpPkmn1 - previous_pkmn1_exp) * 6
 end
 
 function overworldMovementReward()
@@ -52,7 +52,7 @@ function overworldMovementReward()
 		movement_counter = 0
 	elseif movement_counter > movement_counter_limit then
 		movement_counter = movement_counter + 1
-		final_reward = -15
+		final_reward = -12
 	else
 		movement_counter = movement_counter + 1
 	end
@@ -65,12 +65,15 @@ function explorationReward()
 	if setContains(visitedMaps, data.mapID) then
 		print("Exploring a new map!")
 		addToSet(visitedMaps, data.mapID)
-		final_reward = 200
+		final_reward = 100
 	end
 
 	return final_reward
 end
 
+function timePunishment()
+	return -0.04
+end
 
 --list helper functions
 

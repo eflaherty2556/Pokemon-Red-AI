@@ -2,6 +2,7 @@ import retro
 import gym
 import os
 import time
+import retro.enums
 
 from stable_baselines.common.vec_env import DummyVecEnv
 from stable_baselines.common.policies import MlpPolicy
@@ -19,7 +20,7 @@ def main():
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
+        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE) #, use_restricted_actions=retro.Actions.DISCRETE
         print(env)
         
         # print(env.action_space)
@@ -30,14 +31,26 @@ def main():
         model = A2C(MlpPolicy, vec_env, verbose=1)
 
         start_time = time.time()
-        model.learn(total_timesteps=20000)
+        model.learn(total_timesteps=200000)
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
         
+        print("Attempting to get first pokemon!")
+        start_time = time.time()
+        printed_done = False
+        # sampled_info = False
+
         obs = env.reset()
         while True:
             action, _states = model.predict(obs)
             obs, rewards, dones, info = env.step(action)
             env.render()
+            # if not sampled_info:
+            #     print("Info:\n", info, "\n</info>")
+            #     sampled_info = True
+
+            if dones and not printed_done:
+                print("Success! time elapsed: ", str(time.time()-start_time))
+                printed_done = True
 
         env.close()
 
