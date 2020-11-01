@@ -36,15 +36,15 @@ visitedMaps = {}
 
 
 function moneyReward()
-	return (data.money - previous_money) * 100.0
+	return (data.money - previous_money) * 0.0005
 end
 
 function partyReward()
-	return (data.party_size - previous_party_size) * 2000
+	return (data.party_size - previous_party_size) * 1000
 end
 
 function pkmn1XPReward()
-	return (data.totalExpPkmn1 - previous_pkmn1_exp) * 1500.0
+	return (data.totalExpPkmn1 - previous_pkmn1_exp) * 6
 end
 
 function overworldMovementReward()
@@ -52,9 +52,9 @@ function overworldMovementReward()
 		previous_xPos = data.xPosOverworld
 		previous_yPos = data.yPosOverworld
 		movement_counter = 0
-		final_reward = 5000
+		final_reward = 0.1
 	elseif movement_counter > movement_counter_limit then
-		final_reward = -15 + (-15 * (movement_counter - movement_counter_limit) * 0.01)
+		final_reward = -15 + ((movement_counter - movement_counter_limit) * 0.2)
 		movement_counter = movement_counter + 1
 		
 	else
@@ -67,7 +67,7 @@ end
 function movementDeltaWithinRange(current_pos, last_pos)
 	pos_delta = math.abs(current_pos - last_pos)
 
-	return pos_delta > min_movement_delta
+	return pos_delta <= min_movement_delta
 end
 
 function explorationReward()
