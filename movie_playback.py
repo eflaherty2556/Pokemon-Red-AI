@@ -18,24 +18,25 @@ def main():
         retro.data.Integrations.add_custom_path(
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
-        print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
+        #print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
         env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
-        print(env)
+        #print(env)
         
         # print(env.action_space)
 
-        model = A2C.load("a2c_model_pkmn")
 
-        initial_time = time.time()
         
-        obs = env.reset()
-        while True:
-            action, _states = model.predict(obs)
-            obs, rewards, dones, info = env.step(action)
-            env.render()
-            time_delta = int(time.time() - initial_time)
-            if dones or time_delta >= 120:
-                    break
+
+        movie = retro.Movie('PokemonRed-GameBoy-red-start-000000.bk2')
+        env.initial_state = movie.get_state()
+        
+        env.reset()
+        while movie.step():
+            keys = []
+            for p in range(movie.players):
+                for i in range(env.num_buttons):
+                    keys.append(movie.get_key(i,p))
+            env.step(keys)
                 
 
         env.close()
