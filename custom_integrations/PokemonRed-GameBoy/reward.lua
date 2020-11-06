@@ -67,7 +67,7 @@ end
 function movementDeltaWithinRange(current_pos, last_pos)
 	pos_delta = math.abs(current_pos - last_pos)
 
-	return pos_delta <= min_movement_delta
+	return pos_delta >= min_movement_delta
 end
 
 function explorationReward()
