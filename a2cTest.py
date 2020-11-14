@@ -6,10 +6,13 @@ import retro.enums
 
 from stable_baselines.common.vec_env import DummyVecEnv
 from stable_baselines.common.policies import MlpPolicy
+from stable_baselines.common.policies import MlpLnLstmPolicy
 from stable_baselines import A2C
 from stable_baselines.common.env_checker import check_env
 from stable_baselines.common.cmd_util import make_vec_env
 from stable_baselines.common.policies import FeedForwardPolicy, register_policy
+from stable_baselines.common.evaluation import evaluate_policy
+from stable_baselines.common.vec_env import VecNormalize
 
 #
 class CustomPolicy(FeedForwardPolicy):
@@ -17,7 +20,7 @@ class CustomPolicy(FeedForwardPolicy):
         super(CustomPolicy, self).__init__(*args, **kwargs,
                                            net_arch=[dict(pi=[128, 128, 128],
                                                           vf=[128, 128, 128])],
-                                           feature_extraction="mlp")
+                                           feature_extraction="cnn")
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -31,19 +34,23 @@ def main():
         
         # print(env.action_space)
 
-        vec_env = make_vec_env(lambda: env, n_envs=4)
+        vec_env = make_vec_env(lambda: env, n_envs=32)
+        vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
         # time.sleep(3)    
 
-        model = A2C(CustomPolicy, vec_env, verbose=1)
+        model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
 
         start_time = time.time()
-        model.learn(total_timesteps=50000)
+        model.learn(total_timesteps=50000, tb_log_name="a2c-MLPLnLstm")
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
         
-        print("Attempting to get first pokemon!")
+        print("Evaluating now...")
         start_time = time.time()
         printed_done = False
         # sampled_info = False
+
+        mean_reward = evaluate_policy(model, env, n_eval_episodes=4000, render=False)
+        print("done evaluating! mean reward: ", mean_reward)
 
         obs = env.reset()
         while True:
