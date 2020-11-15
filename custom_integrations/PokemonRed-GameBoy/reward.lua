@@ -1,7 +1,31 @@
--- require 'pylist'
-
 --main functions
 function progress()
+	-- battle_reward = 0
+	-- overworld_reward = 0
+
+	if (data.audioBank == BATTLE_MUSIC) then
+		final_reward = battle_progress()
+		-- battle_reward = battle_progress()
+		-- overworld_reward = previous_overworld_reward
+	else
+		final_reward = overworld_progress()
+		-- overworld_reward = overworld_progress()
+		-- battle_reward = previous_battle_reward
+	end
+
+	return final_reward
+	-- return overworld_reward + battle_reward
+end
+
+function done_check()
+	-- finish once 2 pokemon are obtained
+	if data.party_size == 1 then
+		return true
+	end
+	return false
+end
+
+function overworld_progress()
 	final_reward = moneyReward()
 	final_reward = final_reward + partyReward()
 	final_reward = final_reward + pkmn1XPReward()
@@ -12,12 +36,10 @@ function progress()
 	return final_reward
 end
 
-function done_check()
-	-- finish once 2 pokemon are obtained
-	if data.party_size == 1 then
-		return true
-	end
-	return false
+function battle_progress()
+	final_reward = hpRatio()
+
+	return final_reward
 end
 
 --reward functions
@@ -31,6 +53,11 @@ movement_counter = 0
 movement_counter_limit = 90
 
 visitedMaps = {}
+
+BATTLE_MUSIC = 8
+
+previous_battle_reward = 0
+previous_overworld_reward = 0
 
 function moneyReward()
 	return (data.money - previous_money) * 0.0005
@@ -73,6 +100,14 @@ end
 
 function timePunishment()
 	return -0.04
+end
+
+function hpRatio()
+	player_hp_percentage = data.currHP/data.maxHP
+	enemy_hp_percentage = data.enemyCurrHP/data.enemyMaxHP
+	difference = player_hp_percentage - enemy_hp_percentage
+
+	return difference * 100
 end
 
 --list helper functions

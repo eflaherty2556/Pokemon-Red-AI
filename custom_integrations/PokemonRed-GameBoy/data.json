@@ -30,6 +30,32 @@
 		{
 			"address": 54109,
 			"type": ">d2"
+		},
+		"currHP":
+		{
+			"address": 53270,
+			"type": "<u2"
+		},
+		"maxHP":
+		{
+			"address": 53284,
+			"type": "<u2"
+		},
+		"enemyMaxHP":
+		{
+			"address": 53237,
+			"type": "<u2"
+		},
+		"enemyCurrHP":
+		{
+			"address": 53223,
+			"type": "<u2"
+		},
+		"audioBank":
+		{
+			"address": 49391,
+			"type": "|u1"
 		}
+
 	}
 }

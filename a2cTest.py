@@ -41,7 +41,7 @@ def main():
         model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
 
         start_time = time.time()
-        model.learn(total_timesteps=50000, tb_log_name="a2c-MLPLnLstm")
+        model.learn(total_timesteps=64000, tb_log_name="a2c-MLPLnLstm")
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
         
         print("Evaluating now...")
