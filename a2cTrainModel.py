@@ -2,6 +2,7 @@ import retro
 import gym
 import os
 import time
+import sys
 
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines.common.policies import MlpPolicy
@@ -41,8 +42,9 @@ def train_model(n_vec = 4, time_steps = 2000):
         vec_env.save("a2c_env_stats_pkmn.pk1")
 
 def main():
-     train_model(n_vec=6, time_steps=1000000)   
-
-    
+     if len(sys.argv) < 2:
+             train_model()
+     else:
+             train_model(n_vec=32, time_steps=int(sys.argv[1]))
 if __name__ == "__main__":
         main()
