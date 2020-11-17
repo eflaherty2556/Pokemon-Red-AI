@@ -3,7 +3,7 @@ import gym
 import os
 import time
 
-from stable_baselines.common.vec_env import DummyVecEnv
+from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines import A2C
 from stable_baselines.common.env_checker import check_env
@@ -25,15 +25,20 @@ def train_model(n_vec = 4, time_steps = 2000):
         # print(env.action_space)
 
         vec_env = make_vec_env(lambda: env, n_envs=n_vec)
+        vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
         # time.sleep(3)    
 
-        model = A2C(MlpPolicy, vec_env, verbose=1)
+        model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
 
         start_time = time.time()
-        model.learn(total_timesteps=time_steps)
+        model.learn(total_timesteps=time_steps, tb_log_name="a2c-MLPLnLstm")
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
         
+        #Save model
         model.save("a2c_model_pkmn")
+
+        #Save env stats
+        vec_env.save("a2c_env_stats_pkmn.pk1")
 
 def main():
      train_model(n_vec=6, time_steps=1000000)   
