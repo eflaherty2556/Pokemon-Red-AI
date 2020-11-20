@@ -6,7 +6,9 @@ import retro.enums
 
 from stable_baselines.common.vec_env import DummyVecEnv
 from stable_baselines.common.policies import MlpPolicy
+from stable_baselines.common.policies import CnnPolicy
 from stable_baselines.common.policies import MlpLnLstmPolicy
+from stable_baselines.common.policies import CnnLnLstmPolicy
 from stable_baselines import A2C
 from stable_baselines.common.env_checker import check_env
 from stable_baselines.common.cmd_util import make_vec_env
@@ -29,7 +31,8 @@ def main():
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE) #, use_restricted_actions=retro.Actions.DISCRETE
+        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.IMAGE, use_restricted_actions=retro.Actions.DISCRETE) 
+        #obs_type=retro.Observations.RAM #see https://retro.readthedocs.io/en/latest/python.html#observations
         print(env)
         
         # print(env.action_space)
@@ -40,17 +43,25 @@ def main():
 
         model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
 
+        # pretrain? https://stable-baselines.readthedocs.io/en/master/guide/pretrain.html
+
         start_time = time.time()
-        model.learn(total_timesteps=64000, tb_log_name="a2c-MLPLnLstm")
+        model.learn(total_timesteps=5000000, tb_log_name="a2c-MLP_5M")
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
-        
-        print("Evaluating now...")
+
+        print("Saving model...")
+        model.save("a2c_mlp_5M")
+
+
+        # print("Evaluating now...")
         start_time = time.time()
         printed_done = False
         # sampled_info = False
 
-        mean_reward = evaluate_policy(model, env, n_eval_episodes=4000, render=False)
-        print("done evaluating! mean reward: ", mean_reward)
+        # mean_reward = evaluate_policy(model, env, n_eval_episodes=4000, render=False)
+        # print("done evaluating! mean reward: ", mean_reward)
+
+
 
         obs = env.reset()
         while True:
