@@ -3,7 +3,7 @@ import gym
 import os
 import time
 
-from stable_baselines.common.vec_env import DummyVecEnv
+from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines import A2C
 from stable_baselines.common.env_checker import check_env
@@ -19,20 +19,27 @@ def main():
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, record='.') #, use_restricted_actions=retro.Actions.DISCRETE
+        env = DummyVecEnv([lambda: retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, record='.')]) #, use_restricted_actions=retro.Actions.DISCRETE]
+        env= VecNormalize.load("a2c_env_stats_pkmn.pk1", env)
         print(env)
         
+
         # print(env.action_space)
 
-        model = A2C.load("a2c_model_pkmn")
+        done_printed = False
+        time_start = time.time()
+
+        #Load model
+        model = A2C.load("a2c_mlp_5M")
         
         obs = env.reset()
         while True:
             action, _states = model.predict(obs)
             obs, rewards, dones, info = env.step(action)
-            #env.render()
-            if dones:
-                    break
+            env.render()
+            if dones and not done_printed:
+                    print("Time to completion:", str(time.time() - time_start))
+                    done_printed = True
 
         env.close()
 
