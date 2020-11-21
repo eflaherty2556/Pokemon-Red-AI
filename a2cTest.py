@@ -31,7 +31,7 @@ def main():
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.IMAGE, use_restricted_actions=retro.Actions.DISCRETE) 
+        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE) 
         #obs_type=retro.Observations.RAM #see https://retro.readthedocs.io/en/latest/python.html#observations
         print(env)
         
@@ -50,7 +50,7 @@ def main():
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
 
         print("Saving model...")
-        model.save("a2c_mlp_5M")
+        model.save("a2c_mlp_ram_5M")
 
 
         # print("Evaluating now...")

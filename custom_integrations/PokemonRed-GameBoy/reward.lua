@@ -60,15 +60,24 @@ previous_battle_reward = 0
 previous_overworld_reward = 0
 
 function moneyReward()
-	return (data.money - previous_money) * 0.0005
+	money_reward = (data.money - previous_money) * 0.0005
+
+	previous_money = data.money
+	return money_reward
 end
 
 function partyReward()
-	return (data.party_size - previous_party_size) * 1000
+	party_reward = (data.party_size - previous_party_size) * 1000
+
+	previous_party_size = data.party_size
+	return party_reward
 end
 
 function pkmn1XPReward()
-	return (data.totalExpPkmn1 - previous_pkmn1_exp) * 6
+	xp_reward = (data.totalExpPkmn1 - previous_pkmn1_exp) * 20
+	
+	previous_pkmn1_exp = data.totalExpPkmn1
+	return xp_reward
 end
 
 function overworldMovementReward()
@@ -107,7 +116,7 @@ function hpRatio()
 	enemy_hp_percentage = data.enemyCurrHP/data.enemyMaxHP
 	difference = player_hp_percentage - enemy_hp_percentage
 
-	return difference * 100
+	return difference * 50
 end
 
 --list helper functions
