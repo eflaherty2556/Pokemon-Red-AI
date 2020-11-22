@@ -27,6 +27,8 @@ class CustomPolicy(FeedForwardPolicy):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def main():
+		model_name = "a2c_mlp_ram_10M" #for saving and logging with tensorboard
+
         retro.data.Integrations.add_custom_path(
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
@@ -45,11 +47,11 @@ def main():
         # pretrain? https://stable-baselines.readthedocs.io/en/master/guide/pretrain.html
 
         start_time = time.time()
-        model.learn(total_timesteps=8000000, tb_log_name="a2c_mlp_ram_5M")
+        model.learn(total_timesteps=10000000, tb_log_name=model_name)
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
 
         print("Saving model...")
-        model.save("a2c_mlp_ram_8M")
+        model.save(model_name)
 
 
         # print("Evaluating now...")
