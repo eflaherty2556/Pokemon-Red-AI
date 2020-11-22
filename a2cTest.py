@@ -27,57 +27,56 @@ class CustomPolicy(FeedForwardPolicy):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def main():
-		model_name = "a2c_mlp_ram_10M" #for saving and logging with tensorboard
+    model_name = "a2c_mlp_ram_10M" #for saving and logging with tensorboard
 
-        retro.data.Integrations.add_custom_path(
-                os.path.join(SCRIPT_DIR, "custom_integrations")
-        )
-        print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE, learning_rate=0.00006) 
-        #obs_type=retro.Observations.RAM #see https://retro.readthedocs.io/en/latest/python.html#observations
-        
-        # print(env.action_space)
+    retro.data.Integrations.add_custom_path(os.path.join(SCRIPT_DIR, "custom_integrations"))
 
-        vec_env = make_vec_env(lambda: env, n_envs=32)
-        vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
-        # time.sleep(3)    
+    print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
+    env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE) 
+    #obs_type=retro.Observations.RAM #see https://retro.readthedocs.io/en/latest/python.html#observations
+    
+    # print(env.action_space)
 
-        model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
+    vec_env = make_vec_env(lambda: env, n_envs=32)
+    vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
+    # time.sleep(3)    
 
-        # pretrain? https://stable-baselines.readthedocs.io/en/master/guide/pretrain.html
+    model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/", learning_rate=0.00006)
 
-        start_time = time.time()
-        model.learn(total_timesteps=10000000, tb_log_name=model_name)
-        print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
+    # pretrain? https://stable-baselines.readthedocs.io/en/master/guide/pretrain.html
 
-        print("Saving model...")
-        model.save(model_name)
+    start_time = time.time()
+    model.learn(total_timesteps=10000000, tb_log_name=model_name)
+    print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
 
-
-        # print("Evaluating now...")
-        start_time = time.time()
-        printed_done = False
-        # sampled_info = False
-
-        # mean_reward = evaluate_policy(model, env, n_eval_episodes=4000, render=False)
-        # print("done evaluating! mean reward: ", mean_reward)
+    print("Saving model...")
+    model.save(model_name)
 
 
+    # print("Evaluating now...")
+    start_time = time.time()
+    printed_done = False
+    # sampled_info = False
 
-        obs = env.reset()
-        while True:
-            action, _states = model.predict(obs)
-            obs, rewards, dones, info = env.step(action)
-            env.render()
-            # if not sampled_info:
-            #     print("Info:\n", info, "\n</info>")
-            #     sampled_info = True
+    # mean_reward = evaluate_policy(model, env, n_eval_episodes=4000, render=False)
+    # print("done evaluating! mean reward: ", mean_reward)
 
-            if dones and not printed_done:
-                print("Success! time elapsed: ", str(time.time()-start_time))
-                printed_done = True
 
-        env.close()
+
+    obs = env.reset()
+    while True:
+        action, _states = model.predict(obs)
+        obs, rewards, dones, info = env.step(action)
+        env.render()
+        # if not sampled_info:
+        #     print("Info:\n", info, "\n</info>")
+        #     sampled_info = True
+
+        if dones and not printed_done:
+            print("Success! time elapsed: ", str(time.time()-start_time))
+            printed_done = True
+
+    env.close()
 
     
 if __name__ == "__main__":
