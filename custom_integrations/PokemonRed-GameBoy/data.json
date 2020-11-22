@@ -55,7 +55,16 @@
 		{
 			"address": 49391,
 			"type": "|u1"
+		},
+		"playerActivePokemonLevel":
+		{
+			"address": 53282,
+			"type": "|u1"
+		},
+		"enemyActivePokemonLevel":
+		{
+			"address": 53235,
+			"type": "|u1"
 		}
-
 	}
 }

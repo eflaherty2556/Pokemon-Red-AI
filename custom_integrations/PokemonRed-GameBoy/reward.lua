@@ -38,6 +38,7 @@ end
 
 function battle_progress()
 	final_reward = hpRatio()
+	final_reward = final_reward + levelDifferential()
 
 	return final_reward
 end
@@ -101,7 +102,7 @@ function explorationReward()
 	if setContains(visitedMaps, data.mapID) then
 		print("Exploring a new map!")
 		addToSet(visitedMaps, data.mapID)
-		final_reward = 100
+		final_reward = 1000
 	end
 
 	return final_reward
@@ -116,7 +117,13 @@ function hpRatio()
 	enemy_hp_percentage = data.enemyCurrHP/data.enemyMaxHP
 	difference = player_hp_percentage - enemy_hp_percentage
 
-	return difference * 50
+	return difference * 20
+end
+
+function levelDifferential()
+	difference = data.playerActivePokemonLevel - data.enemyActivePokemonLevel
+
+	return difference * 25
 end
 
 --list helper functions
