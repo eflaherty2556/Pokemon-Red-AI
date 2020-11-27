@@ -18,8 +18,8 @@ function progress()
 end
 
 function done_check()
-	-- finish once 2 pokemon are obtained
-	if data.party_size == 1 then
+	-- finish once oak's parcel is obtained
+	if data.hasOaksParcel > 0 then
 		return true
 	end
 	return false
@@ -52,6 +52,8 @@ previous_xPos = 0
 previous_yPos = 0
 movement_counter = 0
 movement_counter_limit = 90
+
+min_movement_delta = 3
 
 visitedMaps = {}
 

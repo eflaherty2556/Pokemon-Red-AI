@@ -65,6 +65,11 @@
 		{
 			"address": 53235,
 			"type": "|u1"
+		},
+		"hasOaksParcel":
+		{
+			"address": 54797,
+			"type": "|i1"
 		}
 	}
 }
