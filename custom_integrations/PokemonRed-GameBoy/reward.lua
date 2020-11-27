@@ -82,14 +82,15 @@ function pkmn1XPReward()
 end
 
 function overworldMovementReward()
-	final_reward = 0
-	if (data.xPosOverworld ~= previous_xPos or data.yPosOverworld ~= previous_yPos) then
+	if (movementDeltaWithinRange(data.xPosOverworld, previous_xPos) or movementDeltaWithinRange(data.yPosOverworld, previous_yPos)) then
 		previous_xPos = data.xPosOverworld
 		previous_yPos = data.yPosOverworld
 		movement_counter = 0
+		final_reward = 0.01
 	elseif movement_counter > movement_counter_limit then
+		final_reward = -15 + ((movement_counter - movement_counter_limit) * 0.2)
 		movement_counter = movement_counter + 1
-		final_reward = -12
+		
 	else
 		movement_counter = movement_counter + 1
 	end
@@ -97,19 +98,25 @@ function overworldMovementReward()
 	return final_reward
 end
 
+function movementDeltaWithinRange(current_pos, last_pos)
+	pos_delta = math.abs(current_pos - last_pos)
+
+	return pos_delta >= min_movement_delta
+end
+
 function explorationReward()
 	final_reward = 0
 	if setContains(visitedMaps, data.mapID) then
 		print("Exploring a new map!")
 		addToSet(visitedMaps, data.mapID)
-		final_reward = 1000
+		final_reward = 1500
 	end
 
 	return final_reward
 end
 
 function timePunishment()
-	return -0.04
+	return -0.05
 end
 
 function hpRatio()
@@ -117,7 +124,7 @@ function hpRatio()
 	enemy_hp_percentage = data.enemyCurrHP/data.enemyMaxHP
 	difference = player_hp_percentage - enemy_hp_percentage
 
-	return difference * 20
+	return difference * 10
 end
 
 function levelDifferential()

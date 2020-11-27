@@ -38,10 +38,10 @@ def main():
     # print(env.action_space)
 
     vec_env = make_vec_env(lambda: env, n_envs=32)
-    vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
+    vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True)
     # time.sleep(3)    
 
-    model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/", learning_rate=0.00006)
+    model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/", learning_rate=0.001)
 
     # pretrain? https://stable-baselines.readthedocs.io/en/master/guide/pretrain.html
 
