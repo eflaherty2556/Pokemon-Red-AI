@@ -19,7 +19,8 @@ end
 
 function done_check()
 	-- finish once oak's parcel is obtained
-	if data.hasOaksParcel > 0 then
+	-- if data.hasOaksParcel > 0 then
+	if data.party_size > 1 then
 		return true
 	end
 	return false
@@ -84,13 +85,13 @@ function pkmn1XPReward()
 end
 
 function overworldMovementReward()
-	if (movementDeltaWithinRange(data.xPosOverworld, previous_xPos) or movementDeltaWithinRange(data.yPosOverworld, previous_yPos)) then
+	if (movementDeltaOutsideRange(data.xPosOverworld, previous_xPos) or movementDeltaOutsideRange(data.yPosOverworld, previous_yPos)) then
 		previous_xPos = data.xPosOverworld
 		previous_yPos = data.yPosOverworld
 		movement_counter = 0
 		final_reward = 0.01
 	elseif movement_counter > movement_counter_limit then
-		final_reward = -15 + ((movement_counter - movement_counter_limit) * 0.2)
+		final_reward = -15 - ((movement_counter - movement_counter_limit) * 0.02)
 		movement_counter = movement_counter + 1
 		
 	else
@@ -100,11 +101,27 @@ function overworldMovementReward()
 	return final_reward
 end
 
-function movementDeltaWithinRange(current_pos, last_pos)
+function movementDeltaOutsideRange(current_pos, last_pos)
 	pos_delta = math.abs(current_pos - last_pos)
 
 	return pos_delta >= min_movement_delta
 end
+
+-- function overworldMovementReward()
+-- 	final_reward = 0
+-- 	if (data.xPosOverworld ~= previous_xPos or data.yPosOverworld ~= previous_yPos) then
+-- 		previous_xPos = data.xPosOverworld
+-- 		previous_yPos = data.yPosOverworld
+-- 		movement_counter = 0
+-- 	elseif movement_counter > movement_counter_limit then
+-- 		movement_counter = movement_counter + 1
+-- 		final_reward = -12
+-- 	else
+-- 		movement_counter = movement_counter + 1
+-- 	end
+
+-- 	return final_reward
+-- end
 
 function explorationReward()
 	final_reward = 0
@@ -122,6 +139,12 @@ function timePunishment()
 end
 
 function hpRatio()
+	-- shouldn't happen but avoids a divide by 0
+	if (data.maxHP == 0 or data.enemyMaxHP == 0) then
+		return 0
+	end
+
+
 	player_hp_percentage = data.currHP/data.maxHP
 	enemy_hp_percentage = data.enemyCurrHP/data.enemyMaxHP
 	difference = player_hp_percentage - enemy_hp_percentage

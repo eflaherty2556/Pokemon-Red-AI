@@ -4,7 +4,7 @@ import os
 import time
 
 from stable_baselines.common.vec_env import DummyVecEnv
-from stable_baselines.deepq.policies import MlpPolicy
+from stable_baselines.common.policies import CnnLnLstmPolicy
 from stable_baselines import DQN
 from stable_baselines.common.env_checker import check_env
 from stable_baselines.common.cmd_util import make_vec_env
@@ -30,11 +30,11 @@ def main():
         # check_env(env, warn=True)
         # time.sleep(3)
 
-        model = DQN(MlpPolicy, env, verbose=1)
+        model = DQN(CnnLnLstmPolicy, env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
 
         print("STARTING Training!!!")
         start_time = time.time()
-        model.learn(total_timesteps=50000)
+        model.learn(total_timesteps=10000, tb_log_name="DQN-CNNLnLstm")
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
 
         print("Attempting to get first pokemon!")
