@@ -28,18 +28,20 @@ class CustomPolicy(FeedForwardPolicy):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def main():
-    model_name = "a2c_mlp_ram_5M_whynan" #for saving and logging with tensorboard
+    model_name = "a2c_mlp_ram_testWrapper" #for saving and logging with tensorboard
 
     retro.data.Integrations.add_custom_path(os.path.join(SCRIPT_DIR, "custom_integrations"))
 
     print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
     env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE)
 
+    # print("\n\nACTION Space:\n\n", env.action_space)
+    
     #Wrap enviornment for skip limit
-    env = SkipLimit(env=env, time_between_steps=6)
+    env = SkipLimit(env=env, time_between_steps=3)
     #obs_type=retro.Observations.RAM #see https://retro.readthedocs.io/en/latest/python.html#observations
     
-    # print(env.action_space)
+    
 
     vec_env = make_vec_env(lambda: env, n_envs=32)
     vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True)
@@ -70,6 +72,7 @@ def main():
     obs = env.reset()
     while True:
         action, _states = model.predict(obs)
+        # print("ACTION: ", action)
         obs, rewards, dones, info = env.step(action)
         env.render()
         # if not sampled_info:

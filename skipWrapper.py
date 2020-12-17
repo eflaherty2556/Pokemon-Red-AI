@@ -1,6 +1,8 @@
 import gym
 import timer
 
+# ODD NUMBERS ARE THE ONLY NUMBERS THAT WORK
+# DON'T USE EVEN NUMBERS OR THE AGENT WILL STOP AFTER LIKE 3 SECONDS
 class SkipLimit(gym.Wrapper):
     def __init__(self, env, time_between_steps):
         super(SkipLimit, self).__init__(env)
@@ -14,7 +16,7 @@ class SkipLimit(gym.Wrapper):
             self.timer.reset_timer()
         #Else just pause
         else:
-            observation, reward, done, info = self.env.step('None')
+            observation, reward, done, info = self.env.step(0)
         
         self.timer.increment_timer()
 

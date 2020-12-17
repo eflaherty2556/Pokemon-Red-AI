@@ -13,8 +13,9 @@ from stable_baselines.common.cmd_util import make_vec_env
 from stable_baselines.common.policies import FeedForwardPolicy, register_policy
 from stable_baselines.common.evaluation import evaluate_policy
 from stable_baselines.common.vec_env import VecNormalize
-# party size = d163
-# money = d347
+from skipWrapper import SkipLimit
+
+
 #Not Used
 class CustomPolicy(FeedForwardPolicy):
     def __init__(self, *args, **kwargs):
@@ -30,10 +31,10 @@ def train_model(n_vec = 4, time_steps = 2000):
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.IMAGE, use_restricted_actions=retro.Actions.DISCRETE) #, use_restricted_actions=retro.Actions.DISCRETE
+        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE) #, use_restricted_actions=retro.Actions.DISCRETE
         print(env)
         
-        # print(env.action_space)
+        env = SkipLimit(env=env, time_between_steps=5)
 
         vec_env = make_vec_env(lambda: env, n_envs=n_vec)
         vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)

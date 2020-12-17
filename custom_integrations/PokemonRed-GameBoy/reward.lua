@@ -52,7 +52,7 @@ previous_pkmn1_exp = 0
 previous_xPos = 0
 previous_yPos = 0
 movement_counter = 0
-movement_counter_limit = 90
+movement_counter_limit = 120
 
 min_movement_delta = 3
 
