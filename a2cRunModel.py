@@ -17,8 +17,8 @@ def main():
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-        env = DummyVecEnv([lambda: SkipLimit(retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, record='.'), 5)]) #, use_restricted_actions=retro.Actions.DISCRETE]
-        env= VecNormalize.load("a2c_env_stats_pkmn.pk1", env)
+        env = DummyVecEnv([lambda: SkipLimit(retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE), 5)]) #, use_restricted_actions=retro.Actions.DISCRETE]
+        env = VecNormalize.load("a2c_env_stats_pkmn.pk1", env)
         print(env)
 
         done_printed = False
