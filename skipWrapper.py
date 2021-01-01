@@ -16,7 +16,7 @@ class SkipLimit(gym.Wrapper):
             self.timer.reset_timer()
         #Else just pause
         else:
-            observation, reward, done, info = self.env.step(0)
+            observation, reward, done, info = self.env.step(1) #None is index 1 for sum reason
         
         self.timer.increment_timer()
 
