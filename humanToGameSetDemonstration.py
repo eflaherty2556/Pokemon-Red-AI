@@ -9,10 +9,10 @@ root = Tk.Tk()
 root.withdraw()
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 def open_file_dialog():
-    return filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("movie files","*.bk2"),("all files","*.*")))
+    return filedialog.askopenfilename(title = "Select file",filetypes = (("movie files","*.bk2"),("all files","*.*")))
 
 def save_file_dialog():
-    return filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (("movie files","*.bk2"),("all files","*.*")))
+    return filedialog.asksaveasfilename(title = "Select file",filetypes = (("movie files","*.bk2"),("all files","*.*")))
 
 def main():
     movie_path = open_file_dialog()
@@ -23,8 +23,9 @@ def main():
                     os.path.join(SCRIPT_DIR, "custom_integrations")
             )
     print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-    env = DummyVecEnv([lambda: SkipLimit(retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE), 5)]) #, use_restricted_actions=retro.Actions.DISCRETE]
-    env = env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10)
+    # env = DummyVecEnv([lambda: SkipLimit(retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE), 5)]) #, use_restricted_actions=retro.Actions.DISCRETE]
+    # env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10)
+    env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE)
 
     env.initial_state = movie.get_state()
     env.reset()
@@ -46,11 +47,14 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
         keys = []
         for p in range(movie.players):
             for i in range(env.num_buttons):
-                keys.append(movie.getkey(i,p))
+                tempKey = movie.get_key(i,p)
+                if tempKey:
+                    keys.append([env.buttons[i]])
+
         #Append keys to actions
         movie_actions.append(keys)
 
-        
+        print("Keys: ", keys)
         obs, rewards, dones, info = env.step(keys)
 
         movie_obs.append(obs)
@@ -68,6 +72,6 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
     np.savez(save_file_dialog(), actions=movie_actions, episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs, rewards=movie_rewards)
         
 
-
+main()
 
 
