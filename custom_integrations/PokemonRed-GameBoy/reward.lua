@@ -1,28 +1,25 @@
 --main functions
 function progress()
-	-- battle_reward = 0
-	-- overworld_reward = 0
+	frame_count = frame_count + 1
 
 	if (data.audioBank == BATTLE_MUSIC) then
 		final_reward = battle_progress()
-		-- battle_reward = battle_progress()
-		-- overworld_reward = previous_overworld_reward
 	else
 		final_reward = overworld_progress()
-		-- overworld_reward = overworld_progress()
-		-- battle_reward = previous_battle_reward
 	end
 
 	return final_reward
-	-- return overworld_reward + battle_reward
 end
 
 function done_check()
 	-- finish once oak's parcel is obtained
 	-- if data.hasOaksParcel > 0 then
-	if data.party_size > 1 then
+	if data.party_size >= 1 then
 		return true
+	-- elseif frame_count > MAX_RUN_FRAMES then
+	-- 	return true
 	end
+
 	return false
 end
 
@@ -45,6 +42,9 @@ function battle_progress()
 end
 
 --reward functions
+frame_count = 0
+MAX_RUN_FRAMES = 25000 -- ~5 minutes?
+
 previous_money = 3000
 previous_party_size = 0
 previous_pkmn1_exp = 0

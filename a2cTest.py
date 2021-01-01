@@ -28,7 +28,7 @@ class CustomPolicy(FeedForwardPolicy):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def main():
-    model_name = "a2c_mlp_ram_testWrapper" #for saving and logging with tensorboard
+    model_name = "a2c_mlp_ram_testEval" #for saving and logging with tensorboard
 
     retro.data.Integrations.add_custom_path(os.path.join(SCRIPT_DIR, "custom_integrations"))
 
@@ -52,20 +52,22 @@ def main():
     # pretrain? https://stable-baselines.readthedocs.io/en/master/guide/pretrain.html
 
     start_time = time.time()
-    model.learn(total_timesteps=5000000, tb_log_name=model_name)
+    model.learn(total_timesteps=1500000, tb_log_name=model_name)
     print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
 
     print("Saving model...")
     model.save(model_name)
 
 
-    # print("Evaluating now...")
+    
     start_time = time.time()
     printed_done = False
     # sampled_info = False
 
-    # mean_reward = evaluate_policy(model, env, n_eval_episodes=4000, render=False)
-    # print("done evaluating! mean reward: ", mean_reward)
+    print("Evaluating now...")
+    mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=3, render=False, return_episode_rewards=True)
+    print("done evaluating! mean reward: ", mean_reward)
+    print("done evaluating! std reward: ", std_reward)
 
 
 
