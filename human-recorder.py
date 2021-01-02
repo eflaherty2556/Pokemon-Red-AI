@@ -4,43 +4,18 @@ import pyglet
 import sys
 import ctypes
 import os
-import gym
-import numpy as np
 
 from pyglet import clock
 from pyglet.window import key as keycodes
 from pyglet.gl import *
 
 import retro
+from Discretizer import Discretizer
 
 # TODO:
 # indicate to user when episode is over (hard to do without save/restore lua state)
 # record bk2 directly
 # resume from bk2
-
-class Discretizer(gym.ActionWrapper):
-    """
-    Wrap a gym environment and make it use discrete actions.
-    based on https://github.com/openai/retro-baselines/blob/master/agents/sonic_util.py
-    Args:
-        combos: ordered list of lists of valid button combinations
-    """
-
-    def __init__(self, env, combos):
-        super().__init__(env)
-        assert isinstance(env.action_space, gym.spaces.MultiBinary)
-        buttons = env.unwrapped.buttons
-        self._decode_discrete_action = []
-        for combo in combos:
-            arr = np.array([False] * env.action_space.n)
-            for button in combo:
-                arr[buttons.index(button)] = True
-            self._decode_discrete_action.append(arr)
-
-        self.action_space = gym.spaces.Discrete(len(self._decode_discrete_action))
-
-    def action(self, act):
-        return self._decode_discrete_action[act].copy()
 
 SAVE_PERIOD = 60  # frames
 
@@ -85,8 +60,7 @@ def main():
         sys.exit(1)
 
     env = retro.make(game=args.game, state=args.state, inttype=retro.data.Integrations.ALL, use_restricted_actions=retro.Actions.ALL, scenario=args.scenario)
-    env = Discretizer(env, [['B'], [None], ['SELECT'], ['START'],  ['UP'], ['DOWN'], ['LEFT'], ['RIGHT'], ['A']])
-    # ['B', None, 'SELECT', 'START', 'UP', 'DOWN', 'LEFT', 'RIGHT', 'A']
+    env = Discretizer(env)
     obs = env.reset()
     screen_height, screen_width = obs.shape[:2]
 
@@ -182,7 +156,7 @@ def main():
             # record all the actions so far to a bk2 and exit
             i = 0
             while True:
-                movie_filename = 'humanDemo.bk2'
+                movie_filename = './humanDemo.bk2'
                 if not os.path.exists(movie_filename):
                     break
                 i += 1

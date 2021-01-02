@@ -17,6 +17,8 @@ from stable_baselines.common.evaluation import evaluate_policy
 from stable_baselines.common.vec_env import VecNormalize
 from skipWrapper import SkipLimit
 
+from Discretizer import Discretizer
+
 #
 class CustomPolicy(FeedForwardPolicy):
     def __init__(self, *args, **kwargs):
@@ -33,9 +35,10 @@ def main():
     retro.data.Integrations.add_custom_path(os.path.join(SCRIPT_DIR, "custom_integrations"))
 
     print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-    env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE)
+    env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL)
+    env = Discretizer(env)
 
-    # print("\n\nACTION Space:\n\n", env.action_space)
+    print("\n\nACTION Space:\n\n", env.action_space)
     
     #Wrap enviornment for skip limit
     env = SkipLimit(env=env, time_between_steps=3)
@@ -52,7 +55,7 @@ def main():
     # pretrain? https://stable-baselines.readthedocs.io/en/master/guide/pretrain.html
 
     start_time = time.time()
-    model.learn(total_timesteps=1500000, tb_log_name=model_name)
+    model.learn(total_timesteps=1000000, tb_log_name=model_name)
     print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
 
     print("Saving model...")
@@ -65,7 +68,7 @@ def main():
     # sampled_info = False
 
     print("Evaluating now...")
-    mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=3, render=False, return_episode_rewards=True)
+    mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=1, render=False, return_episode_rewards=True)
     print("done evaluating! mean reward: ", mean_reward)
     print("done evaluating! std reward: ", std_reward)
 
@@ -90,3 +93,4 @@ def main():
     
 if __name__ == "__main__":
         main()
+

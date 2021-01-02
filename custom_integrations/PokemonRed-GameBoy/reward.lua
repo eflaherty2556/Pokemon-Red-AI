@@ -16,8 +16,8 @@ function done_check()
 	-- if data.hasOaksParcel > 0 then
 	if data.party_size >= 1 then
 		return true
-	-- elseif frame_count > MAX_RUN_FRAMES then
-	-- 	return true
+	elseif frame_count > MAX_RUN_FRAMES then
+		return true
 	end
 
 	return false
@@ -43,7 +43,7 @@ end
 
 --reward functions
 frame_count = 0
-MAX_RUN_FRAMES = 25000 -- ~5 minutes?
+MAX_RUN_FRAMES = 15000 -- ~5 minutes?
 
 previous_money = 3000
 previous_party_size = 0
