@@ -1,2 +1,13 @@
 .vscode/settings.json
 .vscode/settings.json
+.idea/misc.xml
+.idea/modules.xml
+.idea/other.xml
+.idea/Pokemon-Red-AI.iml
+.idea/vcs.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.vscode/launch.json
+.idea/.gitignore
+humanDemo.bk2
+__pycache__/skipWrapper.cpython-37.pyc
+__pycache__/timer.cpython-37.pyc

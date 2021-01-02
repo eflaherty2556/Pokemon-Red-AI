@@ -13,6 +13,8 @@ from pyglet.gl import *
 
 import retro
 
+from skipWrapper import SkipLimit
+
 # TODO:
 # indicate to user when episode is over (hard to do without save/restore lua state)
 # record bk2 directly
@@ -86,6 +88,7 @@ def main():
 
     env = retro.make(game=args.game, state=args.state, inttype=retro.data.Integrations.ALL, use_restricted_actions=retro.Actions.ALL, scenario=args.scenario)
     env = Discretizer(env, [['B'], [None], ['SELECT'], ['START'],  ['UP'], ['DOWN'], ['LEFT'], ['RIGHT'], ['A']])
+    env = SkipLimit(env, time_between_steps=1)
     # ['B', None, 'SELECT', 'START', 'UP', 'DOWN', 'LEFT', 'RIGHT', 'A']
     obs = env.reset()
     screen_height, screen_width = obs.shape[:2]
@@ -179,14 +182,18 @@ def main():
                 env.em.set_state(save_state)
 
         if keycodes.ESCAPE in keys_pressed or buttoncodes.XBOX in buttons_clicked:
+            #If prexisting movie file, delete
+            if os.path.exists("./humanDemo.bk2"):
+                os.remove("./humanDemo.bk2")
+            
             # record all the actions so far to a bk2 and exit
             i = 0
             while True:
-                movie_filename = 'humanDemo.bk2'
+                movie_filename = './humanDemo.bk2'
                 if not os.path.exists(movie_filename):
                     break
                 i += 1
-            os.makedirs(os.path.dirname(movie_filename), exist_ok=True)
+            #os.makedirs(os.path.dirname(movie_filename), exist_ok=True)
             env.record_movie(movie_filename)
             env.reset()
             for step, act in enumerate(recorded_actions):
