@@ -4,6 +4,8 @@ import pyglet
 import sys
 import ctypes
 import os
+import gym
+import numpy as np
 
 from pyglet import clock
 from pyglet.window import key as keycodes
@@ -15,6 +17,30 @@ import retro
 # indicate to user when episode is over (hard to do without save/restore lua state)
 # record bk2 directly
 # resume from bk2
+
+class Discretizer(gym.ActionWrapper):
+    """
+    Wrap a gym environment and make it use discrete actions.
+    based on https://github.com/openai/retro-baselines/blob/master/agents/sonic_util.py
+    Args:
+        combos: ordered list of lists of valid button combinations
+    """
+
+    def __init__(self, env, combos):
+        super().__init__(env)
+        assert isinstance(env.action_space, gym.spaces.MultiBinary)
+        buttons = env.unwrapped.buttons
+        self._decode_discrete_action = []
+        for combo in combos:
+            arr = np.array([False] * env.action_space.n)
+            for button in combo:
+                arr[buttons.index(button)] = True
+            self._decode_discrete_action.append(arr)
+
+        self.action_space = gym.spaces.Discrete(len(self._decode_discrete_action))
+
+    def action(self, act):
+        return self._decode_discrete_action[act].copy()
 
 SAVE_PERIOD = 60  # frames
 
@@ -58,7 +84,9 @@ def main():
             print(state)
         sys.exit(1)
 
-    env = retro.make(game=args.game, state=args.state, use_restricted_actions=retro.Actions.DISCRETE, scenario=args.scenario)
+    env = retro.make(game=args.game, state=args.state, inttype=retro.data.Integrations.ALL, use_restricted_actions=retro.Actions.ALL, scenario=args.scenario)
+    env = Discretizer(env, [['B'], [None], ['SELECT'], ['START'],  ['UP'], ['DOWN'], ['LEFT'], ['RIGHT'], ['A']])
+    # ['B', None, 'SELECT', 'START', 'UP', 'DOWN', 'LEFT', 'RIGHT', 'A']
     obs = env.reset()
     screen_height, screen_width = obs.shape[:2]
 
@@ -96,7 +124,15 @@ def main():
     pyglet.app.platform_event_loop.start()
 
     fps_display = pyglet.clock.get_fps()
-    #clock.set_fps_limit(60)
+    # x = 0
+    # y = 0
+    # h = win.height
+    # w = win.width
+    # clock.schedule_interval(pyglet.graphics.draw, 1/60,4,
+    #         pyglet.gl.GL_QUADS,
+    #         ('v2f', [x, y, x + w, y, x + w, y + h, x, y + h]),
+    #         ('t2f', [0, 1, 1, 1, 1, 0, 0, 0]),)
+    # clock.set_fps_limit(60)
 
     glEnable(GL_TEXTURE_2D)
     texture_id = GLuint(0)
@@ -162,8 +198,11 @@ def main():
             sys.exit(1)
 
         inputs = {
+            'B': keycodes.X in keys_pressed or buttoncodes.B in buttons_pressed,
             None: keycodes.C in keys_pressed,
-            
+
+            'SELECT': keycodes.TAB in keys_pressed or buttoncodes.SELECT in buttons_pressed,
+            'START': keycodes.ENTER in keys_pressed or buttoncodes.START in buttons_pressed,
 
             'UP': keycodes.UP in keys_pressed or buttoncodes.D_UP in buttons_pressed,
             'DOWN': keycodes.DOWN in keys_pressed or buttoncodes.D_DOWN in buttons_pressed,
@@ -171,13 +210,9 @@ def main():
             'RIGHT': keycodes.RIGHT in keys_pressed or buttoncodes.D_RIGHT in buttons_pressed,
 
             'A': keycodes.Z in keys_pressed or buttoncodes.A in buttons_pressed,
-            'B': keycodes.X in keys_pressed or buttoncodes.B in buttons_pressed,
-
-            'SELECT': keycodes.TAB in keys_pressed or buttoncodes.SELECT in buttons_pressed,
-            'START': keycodes.ENTER in keys_pressed or buttoncodes.START in buttons_pressed,
         }
-        # print("Hey here are the buttons: ", env.buttons)
-        action = 0
+        # print("Hey here are the buttons: ", env.buttons) # ['B', None, 'SELECT', 'START', 'UP', 'DOWN', 'LEFT', 'RIGHT', 'A']
+        action = 1
 
         for i in range(len(env.buttons)):
             if inputs[env.buttons[i]]:
@@ -219,9 +254,12 @@ def main():
         timeout = clock.get_sleep_time(False)
         pyglet.app.platform_event_loop.step(timeout)
 
-        clock.tick()
+        # clock.tick()
 
     pyglet.app.platform_event_loop.stop()
 
 
 main()
+
+
+
