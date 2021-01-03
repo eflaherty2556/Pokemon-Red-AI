@@ -13,11 +13,11 @@ from skipWrapper import SkipLimit
 from Discretizer import Discretizer
 
 
-
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 """root = Tk.Tk()
 root.withdraw()
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def open_file_dialog():
     return filedialog.askopenfilename(title = "Select file",filetypes = (("movie files","*.bk2"),("all files","*.*")))
