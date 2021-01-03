@@ -23,4 +23,5 @@ class Discretizer(gym.ActionWrapper):
         self.action_space = gym.spaces.Discrete(len(self._decode_discrete_action))
 
     def action(self, act):
+        #print("Act:", act)
         return self._decode_discrete_action[act].copy()
