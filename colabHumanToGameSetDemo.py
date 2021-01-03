@@ -112,7 +112,9 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
     movie_actions = np.array(list(map(np.array, movie_actions)))
     movie_obs = np.array(list(map(np.array, movie_obs)))
 
-    np.savez("gameDemo.npz", actions=movie_actions, episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs, rewards=movie_rewards)
+    print("Saving...")
+    np.savez("./gameDemo.npz", actions=movie_actions, episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs, rewards=movie_rewards)
+    print("Done saving!")
         
 
 main()
