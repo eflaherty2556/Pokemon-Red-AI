@@ -101,15 +101,23 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
         movie_obs.append(obs)
         movie_rewards.append(rewards)
     
+    
     movie_episodes = [False*episode_counter]
     movie_episodes[0] = True
     
+    print("Making movie_episodes")
     movie_episodes = np.array(movie_episodes)
 
+    print("Making returns_episodes")
     movie_returns = np.array([sum(movie_rewards)])
 
+    print("Making movie_rewards")
     movie_rewards = np.array(list(map(np.array, movie_rewards)))
+    
+    print("Making movie_actions")
     movie_actions = np.array(list(map(np.array, movie_actions)))
+
+    print("Making movie_obs")
     movie_obs = np.array(list(map(np.array, movie_obs)))
 
     print("Saving...")
