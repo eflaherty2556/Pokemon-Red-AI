@@ -4,11 +4,15 @@ import copy
 
 class ResizeableMatrix:
     def __init__(self, matrix = None, dtype = int) -> None:
-        if matrix:
-            self.matrix = matrix
+        self.matrix = matrix
+    def append(self, toAppend):
+        if self.matrix is None:
+            self.matrix = np.asmatrix(toAppend)
         else:
-            self.matrix = np.matrix([[]])
-    def append(self, toAppend:List):
+            self.matrix = np.vstack((self.matrix, toAppend))
+
+        #Old Version
+        """return
         if not np.array_equal(self.matrix, np.matrix([[]])):
             temp_list = self.matrix.tolist()
             temp_list.append(toAppend)
@@ -18,7 +22,7 @@ class ResizeableMatrix:
         
         
         self.matrix = np.matrix(temp_list)
-        del temp_list
+        del temp_list"""
 
     def __getitem__(self, key:Collection):
         if self.matrix is None:

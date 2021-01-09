@@ -122,10 +122,10 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
 
     #print("Making movie_obs")
     #movie_obs = np.array(list(map(np.array, movie_obs)))
-
+    print('Total Episodes: ', episode_counter)
     print("Saving JSON...")
     json_file = open('./gameDemoJSON.json', mode='w')
-    json.dump(json_dict, json_file)
+    json_string = json.dumps(json_dict)
     #np.savez("./gameDemo.npz", actions=movie_actions.retrieve_matrix(), episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs.retrieve_matrix, rewards=movie_rewards.retrieve_matrix())
     print("Done saving!")
         
