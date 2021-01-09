@@ -80,7 +80,7 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
         #Increment episode counter
         episode_counter += 1
 
-        if episode_counter % 1000 == 0:
+        if episode_counter % 10000 == 0:
             print("Episode:",episode_counter)
 
         #Get keys
