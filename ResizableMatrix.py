@@ -3,7 +3,7 @@ import numpy as np
 import copy
 
 class ResizeableMatrix:
-    def __init__(self, matrix = None, max_cache_size = 500, dtype = int) -> None:
+    def __init__(self, matrix = None, max_cache_size = 50, dtype = int) -> None:
         self.matrix = matrix
         self.temp_list = []
         self.max_cache_size = max_cache_size
@@ -54,4 +54,3 @@ class ResizeableMatrix:
         if self.temp_list:
             self.move_cache_to_main_matrix()
         return self.matrix
-        
