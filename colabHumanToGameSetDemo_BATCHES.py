@@ -74,9 +74,12 @@ def get_batch_name(folder:str, batch_number:int):
 
     return (folder + batch_name)
 
-
+def create_folder(folder:str):
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
     demo_folder = "./Demo_Batches/"
+
     batch_number = 0
     movie_obs = ResizeableMatrix(max_cache_size=250)
     movie_rewards = ResizeableArray(max_cache_size=250)
