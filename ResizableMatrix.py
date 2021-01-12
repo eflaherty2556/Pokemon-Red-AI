@@ -15,10 +15,13 @@ class ResizeableMatrix:
             self.temp_list.append(toAppend)
         
         if len(self.temp_list) > self.max_cache_size:
-            self.append_to_matrix(self.temp_list)
-            del self.temp_list
-            self.temp_list = []
-
+            self.move_cache_to_main_matrix()
+    
+    def move_cache_to_main_matrix(self):
+        self.append_to_matrix(self.temp_list)
+        del self.temp_list
+        self.temp_list = []
+    
     def append_to_matrix(self, toAppend):
         if self.matrix is None:
             self.matrix = np.asmatrix(toAppend)
@@ -48,4 +51,6 @@ class ResizeableMatrix:
         return str(self.matrix)
         
     def retrieve_matrix(self):
+        if self.temp_list:
+            self.move_cache_to_main_matrix()
         return self.matrix
