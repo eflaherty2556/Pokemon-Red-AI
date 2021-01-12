@@ -106,6 +106,11 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
             #Increment batch number
             batch_number += 1
 
+            #Clear Previous inputs
+            movie_obs = ResizeableMatrix()
+            movie_rewards = ResizeableArray()
+            movie_actions = ResizeableMatrix()
+
         #Get keys
         keys = []
         for p in range(movie.players):
