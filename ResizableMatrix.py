@@ -54,3 +54,4 @@ class ResizeableMatrix:
         if self.temp_list:
             self.move_cache_to_main_matrix()
         return self.matrix
+        
