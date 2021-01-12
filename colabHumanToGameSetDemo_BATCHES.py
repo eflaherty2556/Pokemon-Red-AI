@@ -78,9 +78,9 @@ def get_batch_name(folder:str, batch_number:int):
 def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
     demo_folder = "./Demo_Batches/"
     batch_number = 0
-    movie_obs = ResizeableMatrix()
-    movie_rewards = ResizeableArray()
-    movie_actions = ResizeableMatrix()
+    movie_obs = ResizeableMatrix(max_cache_size=250)
+    movie_rewards = ResizeableArray(max_cache_size=250)
+    movie_actions = ResizeableMatrix(max_cache_size=250)
     episode_counter = 0
     while movie.step():
         #Increment episode counter
@@ -107,9 +107,9 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
             batch_number += 1
 
             #Clear Previous inputs
-            movie_obs = ResizeableMatrix()
-            movie_rewards = ResizeableArray()
-            movie_actions = ResizeableMatrix()
+            movie_obs = ResizeableMatrix(max_cache_size=250)
+            movie_rewards = ResizeableArray(max_cache_size=250)
+            movie_actions = ResizeableMatrix(max_cache_size=250)
 
         #Get keys
         keys = []
