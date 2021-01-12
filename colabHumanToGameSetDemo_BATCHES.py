@@ -79,7 +79,7 @@ def create_folder(folder:str):
         os.makedirs(folder)
 def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
     demo_folder = "./Demo_Batches/"
-    get_batch_name(folder=demo_folder)
+    create_folder(folder=demo_folder)
     batch_number = 0
     movie_obs = ResizeableMatrix(max_cache_size=250)
     movie_rewards = ResizeableArray(max_cache_size=250)
