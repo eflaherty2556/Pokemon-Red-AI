@@ -3,9 +3,23 @@ import numpy as np
 import copy
 
 class ResizeableMatrix:
-    def __init__(self, matrix = None, dtype = int) -> None:
+    def __init__(self, matrix = None, max_cache_size = 500, dtype = int) -> None:
         self.matrix = matrix
+        self.temp_list = []
+        self.max_cache_size = max_cache_size
+    
     def append(self, toAppend):
+        if isinstance(toAppend, int):
+            self.temp_list.append([toAppend])
+        else:
+            self.temp_list.append(toAppend)
+        
+        if len(self.temp_list) > self.max_cache_size:
+            self.append_to_matrix(self.temp_list)
+            del self.temp_list
+            self.temp_list = []
+
+    def append_to_matrix(self, toAppend):
         if self.matrix is None:
             self.matrix = np.asmatrix(toAppend)
         else:
