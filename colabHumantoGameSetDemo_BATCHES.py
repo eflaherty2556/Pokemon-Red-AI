@@ -12,7 +12,8 @@ import sys
 from skipWrapper import SkipLimit
 from Discretizer import Discretizer
 
-from ResizableMatrix import ResizeableMatrix
+from ResizeableMatrix import ResizeableMatrix
+from ResizeableArray import ResizeableArray
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -68,11 +69,17 @@ def main():
 
     run_and_create_demonstration(movie=movie, env=env)
 
+def get_batch_name(folder:str, batch_number:int):
+    batch_name = "gameDemo_"+str(batch_number)+".npz"
+
+    return (folder + batch_name)
+
 
 def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
-
+    demo_folder = "./Demo_Batches/"
+    batch_number = 0
     movie_obs = ResizeableMatrix()
-    movie_rewards = ResizeableMatrix()
+    movie_rewards = ResizeableArray()
     movie_actions = ResizeableMatrix()
     episode_counter = 0
     while movie.step():
@@ -81,6 +88,23 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
 
         if episode_counter % 10000 == 0:
             print("Episode:",episode_counter)
+        
+        #Save batch
+        if episode_counter % 50000 == 0:
+            movie_episodes = [False*episode_counter]
+            movie_episodes[0] = True
+            
+            print("Making movie_episodes")
+            movie_episodes = np.array(movie_episodes)
+
+            print("Making returns_episodes")
+            movie_returns = np.array([movie_rewards.sum()])
+
+            #Make file_name
+            np.savez(get_batch_name(folder=demo_folder, batch_number=batch_number), actions=movie_actions.retrieve_matrix(), episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs.retrieve_matrix(), rewards=movie_rewards.retrieve_array())
+
+            #Increment batch number
+            batch_number += 1
 
         #Get keys
         keys = []
@@ -104,28 +128,26 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
         movie_rewards.append(rewards)
     
     
+    
     movie_episodes = [False*episode_counter]
     movie_episodes[0] = True
     
-    print("Making movie_episodes")
-    movie_episodes = np.array(movie_episodes)
-
-    print("Making returns_episodes")
-    movie_returns = np.array([sum(movie_rewards)])
-
-    #print("Making movie_rewards")
-    #movie_rewards = np.array(list(map(np.array, movie_rewards)))
-    
-    #print("Making movie_actions")
-    #movie_actions = np.array(list(map(np.array, movie_actions)))
-
-    #print("Making movie_obs")
-    #movie_obs = np.array(list(map(np.array, movie_obs)))
-
-    print("Saving...")
-    np.savez("./gameDemo.npz", actions=movie_actions.retrieve_matrix(), episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs.retrieve_matrix, rewards=movie_rewards.retrieve_matrix())
-    print("Done saving!")
+    #Save batch if there was no save at the end
+    if episode_counter % 50000 != 0:
+        movie_episodes = [False*episode_counter]
+        movie_episodes[0] = True
         
+        print("Making movie_episodes")
+        movie_episodes = np.array(movie_episodes)
+
+        print("Making returns_episodes")
+        movie_returns = np.array([movie_rewards.sum()])
+
+        #Make file_name
+        np.savez(get_batch_name(folder=demo_folder, batch_number=batch_number), actions=movie_actions.retrieve_matrix(), episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs.retrieve_matrix(), rewards=movie_rewards.retrieve_array())
+
+        #Increment batch number
+        batch_number += 1
 
 main()
 

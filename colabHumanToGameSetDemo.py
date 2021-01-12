@@ -12,7 +12,8 @@ import sys
 from skipWrapper import SkipLimit
 from Discretizer import Discretizer
 
-from ResizableMatrix import ResizeableMatrix
+from ResizeableMatrix import ResizeableMatrix
+from ResizeableArray import ResizeableArray
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -72,7 +73,7 @@ def main():
 def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
 
     movie_obs = ResizeableMatrix()
-    movie_rewards = ResizeableMatrix()
+    movie_rewards = ResizeableArray()
     movie_actions = ResizeableMatrix()
     episode_counter = 0
     while movie.step():
@@ -111,7 +112,7 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
     movie_episodes = np.array(movie_episodes)
 
     print("Making returns_episodes")
-    movie_returns = np.array([sum(movie_rewards)])
+    movie_returns = np.array([movie_rewards.sum()])
 
     #print("Making movie_rewards")
     #movie_rewards = np.array(list(map(np.array, movie_rewards)))
@@ -121,9 +122,11 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
 
     #print("Making movie_obs")
     #movie_obs = np.array(list(map(np.array, movie_obs)))
-
+    
+    
+    
     print("Saving...")
-    np.savez("./gameDemo.npz", actions=movie_actions.retrieve_matrix(), episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs.retrieve_matrix, rewards=movie_rewards.retrieve_matrix())
+    np.savez("./gameDemo.npz", actions=movie_actions.retrieve_matrix(), episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs.retrieve_matrix(), rewards=movie_rewards.retrieve_array())
     print("Done saving!")
         
 
