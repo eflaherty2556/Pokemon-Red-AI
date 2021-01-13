@@ -103,9 +103,11 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
             print("Making returns_episodes")
             movie_returns = np.array([movie_rewards.sum()])
 
+            print("Saving...")
             #Make file_name
             np.savez(get_batch_name(folder=demo_folder, batch_number=batch_number), actions=movie_actions.retrieve_matrix(), episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs.retrieve_matrix(), rewards=movie_rewards.retrieve_array())
 
+            print("Done saving")
             #Increment batch number
             batch_number += 1
 
@@ -151,9 +153,11 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
         print("Making returns_episodes")
         movie_returns = np.array([movie_rewards.sum()])
 
+        print("Saving...")
         #Make file_name
         np.savez(get_batch_name(folder=demo_folder, batch_number=batch_number), actions=movie_actions.retrieve_matrix(), episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs.retrieve_matrix(), rewards=movie_rewards.retrieve_array())
-
+        print("Done saving...")
+        
         #Increment batch number
         batch_number += 1
 
