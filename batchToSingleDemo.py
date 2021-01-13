@@ -24,6 +24,7 @@ def united_all_files_and_save(file_directories:list):
     del data
 
 
+
     
     #Remove first element from list
     file_directories = file_directories[1:] 
