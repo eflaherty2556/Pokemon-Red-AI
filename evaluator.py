@@ -79,26 +79,32 @@ def main():
     print("-Cumulative reward: ", cumulative_reward)
     print("-Reward per step: ", cumulative_reward/eval_time)
     print("--------------------GRAPHS---------------------")
-    plot.figure(figsize=(9, 12))
+    # plot.figure(figsize=(9, 12))
+    plot.figure()
     plot.style.use('ggplot')
 
-    plot.subplot(311)
+    # plot.subplot(311)
     plot.plot(rewards)
     plot.title("Rewards")
     plot.xlabel("Timestep")
     plot.ylabel("Reward")
     plot.grid(True)
+    save(model_name + "-eval-" +"rewards_")
+    plot.show()
 
-    plot.subplot(313)
+    # plot.subplot(313)
     plot.plot(cumulative_rewards)
     plot.title("Cumulative Rewards")
     plot.xlabel("Timestep")
     plot.ylabel("Reward")
     plot.grid(True)
+    save(model_name + "-eval-" +"cumulative_")
+    plot.show()
 
 
+def save(prefix):
     output_dir = SCRIPT_DIR+"/eval_figures"
-    print("Plot output to: ", str(SCRIPT_DIR+"/eval_figures"))
+    
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
@@ -109,10 +115,9 @@ def main():
     current_day = today.strftime("%m-%d-%y--")
 
 
-    figure_name = "eval_figures/" + model_name + "-eval-" + current_day + current_time + ".png"
+    figure_name = "eval_figures/" + prefix + current_day + current_time + ".png"
     plot.savefig(fname=figure_name)
-    plot.show()
-
+    print("Plot output to: ", str(SCRIPT_DIR+"/" + figure_name))
     
 if __name__ == "__main__":
         main()
