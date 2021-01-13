@@ -46,3 +46,9 @@ def united_all_files_and_save(file_directories:list):
     episode_returns = np.array([np.sum(rewards)])
 
     np.savez("./gameDemoComplete.npz", actions=actions, obs=obs, episode_starts=episode_starts, rewards=rewards, episode_returns=episode_returns)
+
+def main():
+    united_all_files_and_save(get_files_directories("./Demo_Batches"))
+
+
+main()
