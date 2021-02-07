@@ -14,7 +14,7 @@ from stable_baselines.common.policies import FeedForwardPolicy, register_policy
 from stable_baselines.common.evaluation import evaluate_policy
 from stable_baselines.common.vec_env import VecNormalize
 from skipWrapper import SkipLimit
-
+from Discretizer import Discretizer
 
 #Not Used
 class CustomPolicy(FeedForwardPolicy):
@@ -31,7 +31,8 @@ def train_model(n_vec = 4, time_steps = 2000):
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE) #, use_restricted_actions=retro.Actions.DISCRETE
+        env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
+        env = Discretizer(env)
         print(env)
         
         env = SkipLimit(env=env, time_between_steps=5)

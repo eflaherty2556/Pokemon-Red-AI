@@ -237,6 +237,7 @@ def main():
         pyglet.app.platform_event_loop.step(timeout)
 
         # clock.tick()
+        time.sleep((1/150))
 
     pyglet.app.platform_event_loop.stop()
 
