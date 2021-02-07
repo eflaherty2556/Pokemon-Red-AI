@@ -1,8 +1,3 @@
-__pycache__/Discretizer.cpython-37.pyc
-__pycache__/ResizableMatrix.cpython-37.pyc
-__pycache__/timer.cpython-37.pyc
-__pycache__/skipWrapper.cpython-37.pyc
-.vscode/settings.json
 .vscode/settings.json
 .idea/misc.xml
 .idea/modules.xml
@@ -24,4 +19,3 @@ Demo_Batches/gameDemo_3.npz
 Demo_Batches/gameDemo_4.npz
 Demo_Batches/gameDemo_5.npz
 Demo_Batches/gameDemo_6.npz
-
