@@ -13,6 +13,7 @@ from stable_baselines.common.cmd_util import make_vec_env
 from stable_baselines.common.policies import FeedForwardPolicy, register_policy
 from stable_baselines.common.evaluation import evaluate_policy
 from stable_baselines.common.vec_env import VecNormalize
+from stable_baselines.gail import ExpertDataset
 from skipWrapper import SkipLimit
 from Discretizer import Discretizer
 
@@ -41,7 +42,10 @@ def train_model(n_vec = 4, time_steps = 2000):
         vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
         # time.sleep(3)    
 
+        expert_dataset = ExpertDataset(expert_path='./gameDemoComplete.npz')
         model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
+
+        model.pretrain(expert_dataset)
 
         start_time = time.time()
         model.learn(total_timesteps=time_steps, tb_log_name="a2c-MLP_5M")
