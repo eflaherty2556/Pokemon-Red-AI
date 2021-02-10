@@ -27,7 +27,7 @@ class CustomPolicy(FeedForwardPolicy):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def train_model(n_vec = 4, time_steps = 2000):
+def train_model(n_vec = 4, time_steps = 2000, epochs = 1000):
         retro.data.Integrations.add_custom_path(
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
@@ -42,10 +42,10 @@ def train_model(n_vec = 4, time_steps = 2000):
         vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
         # time.sleep(3)    
 
-        expert_dataset = ExpertDataset(expert_path='./gameDemoComplete.npz')
+        expert_dataset = ExpertDataset(expert_path='./gameDemo.npz')
         model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
 
-        model.pretrain(expert_dataset)
+        model.pretrain(expert_dataset, n_epochs=epochs)
 
         start_time = time.time()
         model.learn(total_timesteps=time_steps, tb_log_name="a2c-MLP_5M")
@@ -60,9 +60,9 @@ def train_model(n_vec = 4, time_steps = 2000):
         vec_env.save("a2c_env_stats_pkmn.pk1")
 
 def main():
-     if len(sys.argv) < 2:
+     if len(sys.argv) < 3:
              train_model()
      else:
-             train_model(n_vec=32, time_steps=int(sys.argv[1]))
+             train_model(n_vec=32, time_steps=int(sys.argv[1]), epochs=int(sys.argv[2]))
 if __name__ == "__main__":
         main()

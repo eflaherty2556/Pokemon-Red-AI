@@ -11,7 +11,7 @@ from pyglet.gl import *
 
 import retro
 from Discretizer import Discretizer
-
+import time
 from skipWrapper import SkipLimit
 
 # TODO:
