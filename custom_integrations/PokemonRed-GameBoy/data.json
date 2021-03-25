@@ -70,6 +70,101 @@
 		{
 			"address": 54797,
 			"type": "|i1"
+		},
+		"badges":
+		{
+			"address": 54102,
+			"type": "|u1"
+		},
+		"playerPkmnATKmod":
+		{
+			"address": 52506,
+			"type": "|u1"
+		},
+		"playerPkmnDEFmod":
+		{
+			"address": 52507,
+			"type": "|u1"
+		},
+		"playerPkmnSPDmod":
+		{
+			"address": 52508,
+			"type": "|u1"
+		},
+		"playerPkmnSPECmod":
+		{
+			"address": 52509,
+			"type": "|u1"
+		},
+		"playerPkmnACCmod":
+		{
+			"address": 52510,
+			"type": "|u1"
+		},
+		"playerPkmnEVAmod":
+		{
+			"address": 52511,
+			"type": "|u1"
+		},
+		"enemyPkmnATKmod":
+		{
+			"address": 52526,
+			"type": "|u1"
+		},
+		"enemyPkmnDEFmod":
+		{
+			"address": 52527,
+			"type": "|u1"
+		},
+		"enemyPkmnSPDmod":
+		{
+			"address": 52528,
+			"type": "|u1"
+		},
+		"enemyPkmnSPECmod":
+		{
+			"address": 52529,
+			"type": "|u1"
+		},
+		"enemyPkmnACCmod":
+		{
+			"address": 52530,
+			"type": "|u1"
+		},
+		"enemyPkmnEVAmod":
+		{
+			"address": 52531,
+			"type": "|u1"
+		},
+		"playerPkmnStatus":
+		{
+			"address": 53272,
+			"type": "|u1"
+		},
+		"enemyPkmnStatus":
+		{
+			"address": 53225,
+			"type": "|u1"
+		},
+		"playerMoveType":
+		{
+			"address": 53205,
+			"type": "|u1"
+		},
+		"enemyMoveType":
+		{
+			"address": 53199,
+			"type": "|u1"
+		},
+		"playerMoveBP":
+		{
+			"address": 53204,
+			"type": "|u1"
+		},
+		"playerMoveACC":
+		{
+			"address": 53206,
+			"type": "|u1"
 		}
 	}
 }
