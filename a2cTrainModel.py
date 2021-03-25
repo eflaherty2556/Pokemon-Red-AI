@@ -47,6 +47,10 @@ def train_model(n_vec = 4, time_steps = 2000, epochs = 1000):
         expert_dataset = ExpertDataset(expert_path='./gameDemo.npz')
         model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
 
+        #Save env stats
+        print("Saving env stats...")
+        vec_env.save("a2c_env_stats_pkmn.pk1")
+
         model.pretrain(expert_dataset, n_epochs=epochs)
 
         start_time = time.time()
@@ -58,8 +62,8 @@ def train_model(n_vec = 4, time_steps = 2000, epochs = 1000):
         model.save("a2c_mlp_5M")
 
         #Save env stats
-        print("Saving env stats...")
-        vec_env.save("a2c_env_stats_pkmn.pk1")
+        #print("Saving env stats...")
+        #vec_env.save("a2c_env_stats_pkmn.pk1")
 
 def main():
      if len(sys.argv) < 3:
