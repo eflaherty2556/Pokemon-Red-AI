@@ -42,7 +42,7 @@ def train_model(n_vec = 4, time_steps = 4000, epochs = 500):
 
         vec_env = make_vec_env(lambda: env, n_envs=n_vec)
         vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
-        # time.sleep(3)    
+         
 
         expert_dataset = ExpertDataset(expert_path='./gameDemo.npz')
         model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
@@ -50,17 +50,16 @@ def train_model(n_vec = 4, time_steps = 4000, epochs = 500):
         start_time = time.time()
 
         model.pretrain(expert_dataset, n_epochs=epochs)
-        model.learn(total_timesteps=time_steps, tb_log_name="a2c-MLP_5M")
         
-        print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
+        print("PRETRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
         
         #Save env stats
         print("Saving env stats...")
-        vec_env.save("a2c_env_stats_pkmn.pk1")
+        vec_env.save("a2c_env_stats_pkmn_pretrain.pk1")
 
         #Save model
         print("Saving model...")
-        model.save("a2c_mlp_5M")
+        model.save("a2c_mlp_5M_pretrain")
 
         #Save env stats
         #print("Saving env stats...")
