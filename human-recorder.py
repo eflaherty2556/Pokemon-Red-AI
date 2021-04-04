@@ -11,7 +11,7 @@ from pyglet.gl import *
 
 import retro
 from Discretizer import Discretizer
-
+import time
 from skipWrapper import SkipLimit
 
 # TODO:
@@ -237,6 +237,7 @@ def main():
         pyglet.app.platform_event_loop.step(timeout)
 
         # clock.tick()
+        time.sleep((2/150))
 
     pyglet.app.platform_event_loop.stop()
 
