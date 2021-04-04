@@ -16,8 +16,9 @@ function done_check()
 	-- if data.hasOaksParcel > 0 then
 	if data.party_size >= 1 then
 		return true
-	elseif frame_count > MAX_RUN_FRAMES then
-		return true
+
+	-- elseif frame_count > MAX_RUN_FRAMES then
+	-- 	return true
 	end
 
 	return false
@@ -30,6 +31,8 @@ function overworld_progress()
 	final_reward = final_reward + overworldMovementReward()
 	final_reward = final_reward + explorationReward()
 	final_reward = final_reward + timePunishment()
+	final_reward = final_reward + badgeReward()
+	final_reward = final_reward + OaksParcelReward()
 
 	return final_reward
 end
@@ -37,6 +40,10 @@ end
 function battle_progress()
 	final_reward = hpRatio()
 	final_reward = final_reward + levelDifferential()
+	final_reward = final_reward + enemyStatusEffect()
+	final_reward = final_reward + playerStatusEffect()
+	final_reward = final_reward + enemyStatModifiers()
+	final_reward = final_reward + playerStatModifiers()
 
 	return final_reward
 end
@@ -62,6 +69,27 @@ BATTLE_MUSIC = 8
 
 previous_battle_reward = 0
 previous_overworld_reward = 0
+
+has_oaks_parcel = false
+current_badges = 0
+
+previous_enemy_status = 0
+previous_player_status = 0
+
+previous_enemy_ATK_mod = 7
+previous_enemy_DEF_mod = 7
+previous_enemy_SPD_mod = 7
+previous_enemy_SPEC_mod = 7
+previous_enemy_ACC_mod = 7
+previous_enemy_EVA_mod = 7
+
+previous_player_ATK_mod = 7
+previous_player_DEF_mod = 7
+previous_player_SPD_mod = 7
+previous_player_SPEC_mod = 7
+previous_player_ACC_mod = 7
+previous_player_EVA_mod = 7
+
 
 function moneyReward()
 	money_reward = (data.money - previous_money) * 0.0005
@@ -126,7 +154,6 @@ end
 function explorationReward()
 	final_reward = 0
 	if setContains(visitedMaps, data.mapID) then
-		print("Exploring a new map!")
 		addToSet(visitedMaps, data.mapID)
 		final_reward = 1500
 	end
@@ -136,6 +163,26 @@ end
 
 function timePunishment()
 	return -0.05
+end
+
+function badgeReward()
+	resulting_reward = 0
+	if(current_badges ~= data.badges) then
+		current_badges = data.badges
+		resulting_reward = 2000 * current_badges
+	end
+
+	return resulting_reward
+end
+
+function OaksParcelReward()
+	resulting_reward = 0
+	if (not has_oaks_parcel and data.hasOaksParcel > 0) then
+		resulting_reward = 1000
+		has_oaks_parcel = true
+	end
+
+	return resulting_reward
 end
 
 function hpRatio()
@@ -156,6 +203,110 @@ function levelDifferential()
 	difference = data.playerActivePokemonLevel - data.enemyActivePokemonLevel
 
 	return difference * 25
+end
+
+function enemyStatusEffect()
+	resulting_reward = 0
+
+	if (data.enemyPkmnStatus ~= previous_enemy_status) then
+		previous_enemy_status = data.enemyPkmnStatus
+
+		if (previous_enemy_status == 64) then
+			resulting_reward = 20 -- paralysis
+		elseif (previous_enemy_status == 32) then
+			resulting_reward = 90 -- freeze
+		elseif (previous_enemy_status == 16) then
+			resulting_reward = 40 -- burn
+		elseif (previous_enemy_status == 8) then
+			resulting_reward = 30 -- poison
+		else
+			resulting_reward = 70 -- sleep
+		end
+	end
+
+	return resulting_reward
+end
+
+function playerStatusEffect()
+	resulting_reward = 0
+
+	if (data.playerPkmnStatus ~= previous_player_status) then
+		previous_player_status = data.playerPkmnStatus
+
+		if (previous_player_status == 64) then
+			resulting_reward = -20 -- paralysis
+		elseif (previous_player_status == 32) then
+			resulting_reward = -90 -- freeze
+		elseif (previous_player_status == 16) then
+			resulting_reward = -40 -- burn
+		elseif (previous_player_status == 8) then
+			resulting_reward = -30 -- poison
+		else
+			resulting_reward = -70 --sleep
+		end
+	end
+
+	return resulting_reward
+end
+
+function enemyStatModifiers()
+	resulting_reward = 0
+
+	if (data.enemyPkmnATKmod ~= previous_enemy_ATK_mod) then
+		resulting_reward = resulting_reward + ((data.enemyPkmnATKmod - previous_enemy_ATK_mod) * -5)
+	end
+
+	if (data.enemyPkmnDEFmod ~= previous_enemy_DEF_mod) then
+		resulting_reward = resulting_reward + ((data.enemyPkmnDEFmod - previous_enemy_DEF_mod) * -5)
+	end
+
+	if (data.enemyPkmnSPDmod ~= previous_enemy_SPD_mod) then
+		resulting_reward = resulting_reward + ((data.enemyPkmnSPDmod - previous_enemy_SPD_mod) * -3)
+	end
+
+	if (data.enemyPkmnSPECmod ~= previous_enemy_SPEC_mod) then
+		resulting_reward = resulting_reward + ((data.enemyPkmnSPECmod - previous_enemy_SPEC_mod) * -5)
+	end
+
+	if (data.enemyPkmnACCmod ~= previous_enemy_ACC_mod) then
+		resulting_reward = resulting_reward + ((data.enemyPkmnACCmod - previous_enemy_ACC_mod) * -5)
+	end
+
+	if (data.enemyPkmnEVAmod ~= previous_enemy_EVA_mod) then
+		resulting_reward = resulting_reward + ((data.enemyPkmnEVAmod - previous_enemy_EVA_mod) * -2)
+	end
+
+	return resulting_reward
+end
+
+function playerStatModifiers()
+	resulting_reward = 0
+
+	if (data.playerPkmnATKmod ~= previous_player_ATK_mod) then
+		resulting_reward = resulting_reward + ((data.playerPkmnATKmod - previous_player_ATK_mod) * 10)
+	end
+
+	if (data.playerPkmnDEFmod ~= previous_player_DEF_mod) then
+		resulting_reward = resulting_reward + ((data.playerPkmnDEFmod - previous_player_DEF_mod) * 10)
+	end
+
+	if (data.playerPkmnSPDmod ~= previous_player_SPD_mod) then
+		resulting_reward = resulting_reward + ((data.playerPkmnSPDmod - previous_player_SPD_mod) * 6)
+	end
+
+	if (data.playerPkmnSPECmod ~= previous_player_SPEC_mod) then
+		resulting_reward = resulting_reward + ((data.playerPkmnSPECmod - previous_player_SPEC_mod) * 10)
+	end
+
+	if (data.playerPkmnACCmod ~= previous_player_ACC_mod) then
+		resulting_reward = resulting_reward + ((data.playerPkmnACCmod - previous_player_ACC_mod) * 10)
+	end
+
+	if (data.playerPkmnEVAmod ~= previous_player_EVA_mod) then
+		resulting_reward = resulting_reward + ((data.playerPkmnEVAmod - previous_player_EVA_mod) * 4)
+	end
+
+	return resulting_reward
 end
 
 --list helper functions
