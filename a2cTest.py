@@ -35,7 +35,7 @@ def main():
     retro.data.Integrations.add_custom_path(os.path.join(SCRIPT_DIR, "custom_integrations"))
 
     print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
-    env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL)
+    env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL, record=True)
     env = Discretizer(env)
 
     print("\n\nACTION Space:\n\n", env.action_space)
@@ -55,7 +55,7 @@ def main():
     # pretrain? https://stable-baselines.readthedocs.io/en/master/guide/pretrain.html
 
     start_time = time.time()
-    model.learn(total_timesteps=1000000, tb_log_name=model_name)
+    model.learn(total_timesteps=50000, tb_log_name=model_name)
     print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
 
     print("Saving model...")
@@ -67,12 +67,13 @@ def main():
     printed_done = False
     # sampled_info = False
 
-    print("Evaluating now...")
-    mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=1, render=False, return_episode_rewards=True)
-    print("done evaluating! mean reward: ", mean_reward)
-    print("done evaluating! std reward: ", std_reward)
+    # print("Evaluating now...")
+    # mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=1, render=False, return_episode_rewards=True)
+    # print("done evaluating! mean reward: ", mean_reward)
+    # print("done evaluating! std reward: ", std_reward)
 
-
+    curent_step = 0
+    movie_step_length = 10000
 
     obs = env.reset()
     while True:
@@ -87,6 +88,11 @@ def main():
         if dones and not printed_done:
             print("Success! time elapsed: ", str(time.time()-start_time))
             printed_done = True
+
+        if curent_step < movie_step_length:
+            curent_step += 1
+        else:
+            break
 
     env.close()
 
