@@ -4,7 +4,8 @@
 
 This project is a reinforcement-learning-based AI that plays Pokemon Red for the GameBoy. 
 
-<img src="https://github.com/JFlaherty347/Pokemon-Red-AI/blob/master/images/Screenshot%20from%202021-01-07%2015-53-28.png" alt="game" width="300">
+<img src="https://raw.githubusercontent.com/JFlaherty347/Pokemon-Red-AI/master/images/overworld.png" alt="game" width="200">
+<img src="https://raw.githubusercontent.com/JFlaherty347/Pokemon-Red-AI/master/images/battle.png" alt="game" width="200">
 
 ## Motivation
 
