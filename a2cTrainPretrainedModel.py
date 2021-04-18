@@ -74,6 +74,6 @@ def main():
      parser.add_argument("-t", "--timesteps", help="Number of timesteps")
      parser.add_argument('--n_vec', help="Number of vectors in enviornment", default=32)
      args = parser.parse_args()
-     train_model(n_vec=args.n_vec, time_steps=args.timesteps)
+     train_model(n_vec=int(args.n_vec), time_steps=int(args.timesteps))
 if __name__ == "__main__":
         main()
