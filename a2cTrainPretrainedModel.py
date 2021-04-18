@@ -36,7 +36,6 @@ def train_model(n_vec = 4, time_steps = 4000, epochs = 500):
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
         env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
         env = Discretizer(env)
-        print(env)
         
         env = SkipLimit(env=env, time_between_steps=5)
 
@@ -44,15 +43,15 @@ def train_model(n_vec = 4, time_steps = 4000, epochs = 500):
         #vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
         vec_env = env = VecNormalize.load("a2c_env_stats_pkmn_pretrain.pk1", vec_env)
         # time.sleep(3)    
-
+        print(env)
         
         #model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/")
-        model = A2C.load("a2c_mlp_5M_pretrain")
-
+        model = A2C.load("a2c_mlp_5M_pretrain", env=vec_env, tensorboard_log="./pokemon-red-tensorboard")
+        #model.set_env(vec_env)
         start_time = time.time()
 
         
-        model.learn(total_timesteps=time_steps, tb_log_name="a2c-MLP_5M")
+        model.learn(total_timesteps=time_steps, tb_log_name="a2c-MLP_Pretrained")
         
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
         
@@ -62,7 +61,7 @@ def train_model(n_vec = 4, time_steps = 4000, epochs = 500):
 
         #Save model
         print("Saving model...")
-        model.save("a2c_mlp_5M")
+        model.save("a2c_mlp_PretrainTest")
 
         #Save env stats
         #print("Saving env stats...")
