@@ -17,6 +17,8 @@ from stable_baselines.gail import ExpertDataset
 from skipWrapper import SkipLimit
 from Discretizer import Discretizer
 
+import argparse
+
 
 
 #Not Used
@@ -29,7 +31,7 @@ class CustomPolicy(FeedForwardPolicy):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def train_model(n_vec = 4, time_steps = 4000, epochs = 500):
+def train_model(n_vec = 4, time_steps = 4000):
         retro.data.Integrations.add_custom_path(
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
@@ -68,9 +70,10 @@ def train_model(n_vec = 4, time_steps = 4000, epochs = 500):
         #vec_env.save("a2c_env_stats_pkmn.pk1")
 
 def main():
-     if len(sys.argv) < 3:
-             train_model()
-     else:
-             train_model(n_vec=32, time_steps=int(sys.argv[1]), epochs=int(sys.argv[2]))
+     parser = argparse.ArgumentParser(description="Train pretrained model")
+     parser.add_argument("-t", "--timesteps", help="Number of timesteps")
+     parser.add_argument('--n_vec', help="Number of vectors in enviornment", default=32)
+     args = parser.parse_args()
+     train_model(n_vec=args.n_vec, time_steps=args.timesteps)
 if __name__ == "__main__":
         main()
