@@ -57,8 +57,8 @@ def main():
 	# hyperparameters to tune ((1-2) * 3 * 3 * 2 * 3)(3 * 3 * 3)(3 * 4 * 3)
 
 	# model (set 1)
-	# policy = [MlpPolicy]
-	policy = [MlpPolicy, CnnPolicy]
+	policy = [MlpPolicy]
+	# policy = [MlpPolicy, CnnPolicy]
 	gamma = [0.982, 0.990, 0.997]
 	learning_rate = [0.00035, 0.0007, 0.0012]
 	n_steps = [5, 10]
