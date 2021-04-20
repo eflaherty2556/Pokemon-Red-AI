@@ -77,7 +77,7 @@ def main():
 	toal_tests = 1
 
 	if hyperparameter_set == 1:
-		write_to_results(hyperparameter_set, "\n\nTraining on hyperparameter set 1...\n")
+		write_to_results(hyperparameter_set, "\n------------------------\nTraining on hyperparameter set 1...\n")
 		total_tests = len(policy) * len(gamma) * len(learning_rate) * len(n_steps) * len(schedule)
 		for p in policy:
 			for g in gamma:
@@ -106,11 +106,11 @@ def main():
 							write_to_results(hyperparameter_set, "reward_per_step = " + str(reward_per_step) + "; cumulative_reward = " + str(cumulative_reward) + ";\n")
 
 		write_to_results(hyperparameter_set, "DONE!\n")
-		performances.sort(key=lambda x: x[0])
+		performances.sort(key=lambda x: x[0], reverse=True)
 		write_to_results(hyperparameter_set, "Best set 1 configuration (by reward per step): " + str(performances[0]) + "\n")
 
 	elif hyperparameter_set == 2:
-		write_to_results(hyperparameter_set, "\n\nTraining on hyperparameter set 2...")
+		write_to_results(hyperparameter_set, "\n------------------------\nTraining on hyperparameter set 2...")
 		total_tests = len(value_function_coefficient) * len(entropy_coefficient) * len(max_gradient_norm)
 		for v in value_function_coefficient:
 			for e in entropy_coefficient:
@@ -137,11 +137,11 @@ def main():
 					write_to_results(hyperparameter_set, "reward_per_step = " + str(reward_per_step) + "; cumulative_reward = " + str(cumulative_reward) + ";\n")
 
 		write_to_results(hyperparameter_set, "DONE!\n")
-		performances.sort(key=lambda x: x[0])
+		performances.sort(key=lambda x: x[0], reverse=True)
 		write_to_results(hyperparameter_set, "Best set 2 configuration (by reward per step): " + str(performances[0]) + "\n")
 
 	elif hyperparameter_set == 3:
-		write_to_results(hyperparameter_set, "\n\nTraining on hyperparameter set 3...")
+		write_to_results(hyperparameter_set, "\n------------------------\nTraining on hyperparameter set 3...")
 		total_tests = len(alpha) * len(momentum) * len(epsilon)
 		for a in alpha:
 			for m in momentum:
@@ -168,8 +168,14 @@ def main():
 					write_to_results(hyperparameter_set, "reward_per_step = " + str(reward_per_step) + "; cumulative_reward = " + str(cumulative_reward) + ";\n")
 
 		write_to_results(hyperparameter_set, "DONE!\n")
-		performances.sort(key=lambda x: x[0])
+		performances.sort(key=lambda x: x[0], reverse=True)
 		write_to_results(hyperparameter_set, "Best set 3 configuration (by reward per step): " + str(performances[0]) + "\n")
+
+
+	env.close()
+	vec_env.close()
+	test_env.close()
+
 
 def evaluate(model, evaluation_steps, env):
 	cumulative_reward = 0
