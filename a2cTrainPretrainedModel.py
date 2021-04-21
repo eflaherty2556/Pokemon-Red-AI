@@ -14,6 +14,7 @@ from stable_baselines.common.policies import FeedForwardPolicy, register_policy
 from stable_baselines.common.evaluation import evaluate_policy
 from stable_baselines.common.vec_env import VecNormalize
 from stable_baselines.gail import ExpertDataset
+from stable_baselines.common.callbacks import CheckpointCallback
 from skipWrapper import SkipLimit
 from Discretizer import Discretizer
 
@@ -52,8 +53,8 @@ def train_model(n_vec = 4, time_steps = 4000):
         #model.set_env(vec_env)
         start_time = time.time()
 
-        
-        model.learn(total_timesteps=time_steps, tb_log_name="a2c-MLP_Pretrained")
+        checkpoint = CheckpointCallback(save_freq=10000, save_path='./trainedModels', name_prefix='a2c-MLP_Pretrained_Checkpoint')
+        model.learn(total_timesteps=time_steps, tb_log_name="a2c-MLP_Pretrained_Checkpoint", callback=checkpoint)
         
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
         
