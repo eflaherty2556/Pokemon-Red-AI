@@ -53,7 +53,7 @@ def train_model(n_vec = 4, time_steps = 4000):
         #model.set_env(vec_env)
         start_time = time.time()
 
-        checkpoint = CheckpointCallback(save_freq=10000, save_path='./trainedModels', name_prefix='a2c-MLP_Pretrained_Checkpoint')
+        checkpoint = CheckpointCallback(save_freq=10000, save_path='./trainedModels', name_prefix='a2c-MLP_Pretrained_Checkpoint', verbose=1)
         model.learn(total_timesteps=time_steps, tb_log_name="a2c-MLP_Pretrained_Checkpoint", callback=checkpoint)
         
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
@@ -63,8 +63,8 @@ def train_model(n_vec = 4, time_steps = 4000):
         vec_env.save("a2c_env_stats_pkmn.pk1")
 
         #Save model
-        print("Saving model...")
-        model.save("a2c_mlp_PretrainTest")
+        print("Saving final model...")
+        model.save("./trainedModels/a2c_mlp_PretrainTest_Checkpoint_Final")
 
         #Save env stats
         #print("Saving env stats...")
