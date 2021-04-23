@@ -12,13 +12,9 @@ function progress()
 end
 
 function done_check()
-	-- finish once oak's parcel is obtained
-	-- if data.hasOaksParcel > 0 then
-	if data.party_size >= 1 then
-		return true
 
-	-- elseif frame_count > MAX_RUN_FRAMES then
-	-- 	return true
+	if data.badges >= 1 then
+		return true
 	end
 
 	return false
