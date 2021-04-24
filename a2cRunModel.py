@@ -1,3 +1,4 @@
+from makeRetroEnv import makeRetroEnv
 import retro
 import gym
 import os
@@ -19,11 +20,12 @@ def main():
     )
     print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
     # env = DummyVecEnv([lambda: SkipLimit(retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL), 3)]) #, use_restricted_actions=retro.Actions.DISCRETE]
-    env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
+    """ env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
     env = Discretizer(env)
-    # env = SkipLimit(env=env, time_between_steps=5)
-    vec_env = DummyVecEnv([lambda: SkipLimit(env=env, time_between_steps=3)])
-    vec_env = VecNormalize.load("a2c_env_stats_pkmn.pk1", vec_env)
+    env = SkipLimit(env=env, time_between_steps=5) """
+    env = makeRetroEnv(ram=False)
+    vec_env = DummyVecEnv([lambda: SkipLimit(env=env, time_between_steps=5)])
+    #vec_env = VecNormalize.load("a2c_env_stats_pkmn.pk1", vec_env)
 
     done_printed = False
     time_start = time.time()

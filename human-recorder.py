@@ -14,6 +14,8 @@ from Discretizer import Discretizer
 import time
 from skipWrapper import SkipLimit
 
+from makeRetroEnv import makeRetroEnv
+
 # TODO:
 # indicate to user when episode is over (hard to do without save/restore lua state)
 # record bk2 directly
@@ -61,9 +63,10 @@ def main():
             print(state)
         sys.exit(1)
 
-    env = retro.make(game=args.game, state=args.state, inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.IMAGE, use_restricted_actions=retro.Actions.ALL, scenario=args.scenario)
+    """ env = retro.make(game=args.game, state=args.state, inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.IMAGE, use_restricted_actions=retro.Actions.ALL, scenario=args.scenario)
     env = Discretizer(env, [['B'], [None], ['SELECT'], ['START'],  ['UP'], ['DOWN'], ['LEFT'], ['RIGHT'], ['A']])
-    env = SkipLimit(env, time_between_steps=1)
+    env = SkipLimit(env, time_between_steps=5) """
+    env = makeRetroEnv(ram=False)
     # ['B', None, 'SELECT', 'START', 'UP', 'DOWN', 'LEFT', 'RIGHT', 'A']
     obs = env.reset()
     screen_height, screen_width = obs.shape[:2]

@@ -12,7 +12,7 @@ import sys
 from skipWrapper import SkipLimit
 from Discretizer import Discretizer
 
-
+from makeRetroEnv import makeRetroEnv
 
 root = Tk.Tk()
 root.withdraw()
@@ -57,9 +57,15 @@ def main():
     #print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
     # env = DummyVecEnv([lambda: SkipLimit(retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.DISCRETE), 5)]) #, use_restricted_actions=retro.Actions.DISCRETE]
     # env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10)
-    env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL)
-    env = Discretizer(env, [['B'], [None], ['SELECT'], ['START'],  ['UP'], ['DOWN'], ['LEFT'], ['RIGHT'], ['A']])
-    env = SkipLimit(env, time_between_steps=5)
+    """ env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.IMAGE, use_restricted_actions=retro.Actions.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
+    env = Discretizer(env)
+    print(env)
+        
+    env = SkipLimit(env=env, time_between_steps=5) """
+    env = makeRetroEnv(ram=True)
+
+    #vec_env = make_vec_env(lambda: env, n_envs=n_vec)
+    #vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
 
     env.initial_state = movie.get_state()
     env.reset()

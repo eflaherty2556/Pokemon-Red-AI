@@ -18,6 +18,9 @@ from stable_baselines.common.callbacks import CheckpointCallback
 from skipWrapper import SkipLimit
 from Discretizer import Discretizer
 
+
+from makeRetroEnv import makeRetroEnv
+
 import argparse
 
 
@@ -33,18 +36,18 @@ class CustomPolicy(FeedForwardPolicy):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def train_model(n_vec = 4, time_steps = 4000):
-        retro.data.Integrations.add_custom_path(
+        """ retro.data.Integrations.add_custom_path(
                 os.path.join(SCRIPT_DIR, "custom_integrations")
         )
         print("PokemonRed-GameBoy" in retro.data.list_games(inttype=retro.data.Integrations.ALL))
         env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.IMAGE, use_restricted_actions=retro.Actions.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
         env = Discretizer(env)
         
-        env = SkipLimit(env=env, time_between_steps=5)
-
+        env = SkipLimit(env=env, time_between_steps=5) """
+        env = makeRetroEnv(ram=True)
         vec_env = make_vec_env(lambda: env, n_envs=n_vec)
         #vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
-        vec_env = env = VecNormalize.load("a2c_env_stats_pkmn_pretrain.pk1", vec_env)
+        #vec_env = env = VecNormalize.load("a2c_env_stats_pkmn_pretrain.pk1", vec_env)
         # time.sleep(3)    
         print(env)
         
@@ -58,9 +61,9 @@ def train_model(n_vec = 4, time_steps = 4000):
         
         print("TRAINING COMPLETE! Time elapsed: ", str(time.time()-start_time))
         
-        #Save env stats
+        """ #Save env stats
         print("Saving env stats...")
-        vec_env.save("a2c_env_stats_pkmn.pk1")
+        vec_env.save("a2c_env_stats_pkmn.pk1") """
 
         #Save model
         print("Saving final model...")
