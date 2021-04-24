@@ -59,7 +59,7 @@ def main():
     # env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10)
     env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL)
     env = Discretizer(env, [['B'], [None], ['SELECT'], ['START'],  ['UP'], ['DOWN'], ['LEFT'], ['RIGHT'], ['A']])
-    env = SkipLimit(env, time_between_steps=1)
+    env = SkipLimit(env, time_between_steps=5)
 
     env.initial_state = movie.get_state()
     env.reset()
@@ -112,7 +112,7 @@ def run_and_create_demonstration(movie: retro.Movie, env : VecNormalize):
     movie_actions = np.array(list(map(np.array, movie_actions)))
     movie_obs = np.array(list(map(np.array, movie_obs)))
 
-    np.savez("~/gameDemo.npz", actions=movie_actions, episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs, rewards=movie_rewards)
+    np.savez("./gameDemo.npz", actions=movie_actions, episode_returns=movie_returns, episode_starts=movie_episodes, obs=movie_obs, rewards=movie_rewards)
         
 
 main()
