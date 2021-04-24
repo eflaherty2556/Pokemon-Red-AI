@@ -17,6 +17,7 @@ from stable_baselines.gail import ExpertDataset
 from skipWrapper import SkipLimit
 from Discretizer import Discretizer
 
+import argparse
 
 
 #Not Used
@@ -66,9 +67,10 @@ def train_model(n_vec = 4, time_steps = 4000, epochs = 500):
         #vec_env.save("a2c_env_stats_pkmn.pk1")
 
 def main():
-     if len(sys.argv) < 3:
-             train_model()
-     else:
-             train_model(n_vec=32, time_steps=int(sys.argv[1]), epochs=int(sys.argv[2]))
+     parser = argparse.ArgumentParser(description="Train pretrained model")
+     parser.add_argument("-e", "--epochs", help="Number of epochs")
+     parser.add_argument('--n_vec', help="Number of vectors in enviornment", default=32)
+     args = parser.parse_args()
+     train_model(n_vec=int(args.n_vec), epochs=int(args.epochs))
 if __name__ == "__main__":
         main()
