@@ -62,7 +62,7 @@ def main():
     print(env)
         
     env = SkipLimit(env=env, time_between_steps=5) """
-    env = makeRetroEnv(ram=True)
+    env = makeRetroEnv(ram=False)
 
     #vec_env = make_vec_env(lambda: env, n_envs=n_vec)
     #vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)

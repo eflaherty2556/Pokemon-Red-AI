@@ -3,6 +3,7 @@ import retro
 import gym
 import os
 import time
+import argparse
 
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines.common.policies import MlpPolicy
@@ -15,6 +16,10 @@ from Discretizer import Discretizer
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def main():
+    parser = argparse.ArgumentParser(description="Train pretrained model")
+    parser.add_argument("-m", "--model", help="Model directory")
+    args = parser.parse_args()
+
     retro.data.Integrations.add_custom_path(
             os.path.join(SCRIPT_DIR, "custom_integrations")
     )
@@ -24,14 +29,14 @@ def main():
     env = Discretizer(env)
     env = SkipLimit(env=env, time_between_steps=5) """
     env = makeRetroEnv(ram=False)
-    vec_env = DummyVecEnv([lambda: SkipLimit(env=env, time_between_steps=5)])
+    vec_env = DummyVecEnv([lambda: env])
     #vec_env = VecNormalize.load("a2c_env_stats_pkmn.pk1", vec_env)
 
     done_printed = False
     time_start = time.time()
 
     #Load model
-    model = A2C.load("a2c-MLP_Pretrained_Checkpoint_16000000_steps")
+    model = A2C.load(args.model)
     
     cumulative_reward = 0
     timesteps = 0

@@ -42,13 +42,13 @@ def train_model(n_vec = 4, time_steps = 4000, epochs = 500):
         print(env)
         
         env = SkipLimit(env=env, time_between_steps=5) """
-        env = makeRetroEnv(ram=True)
+        env = makeRetroEnv(ram=False)
         vec_env = make_vec_env(lambda: env, n_envs=n_vec)
         #vec_env = VecNormalize(vec_env, norm_obs=True, norm_reward=True, clip_obs=10)
          
 
         expert_dataset = ExpertDataset(expert_path='./gameDemo.npz')
-        model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/",momentum=0.01, epsilon=1e-05, lr_schedule='middle_drop', vf_coef=0.3, max_grad_norm=0.55)
+        model = A2C(MlpPolicy, vec_env, verbose=1, tensorboard_log="./pokemon-red-tensorboard/", lr_schedule='middle_drop', vf_coef=0.3, max_grad_norm=0.55, learning_rate=7e-5)
 
         start_time = time.time()
 
