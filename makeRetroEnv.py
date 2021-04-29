@@ -5,7 +5,7 @@ from Discretizer import Discretizer
 from skipWrapper import SkipLimit
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-def makeRetroEnv(ram = False):
+def makeRetroEnv(ram = True):
     obs = retro.Observations.IMAGE
     if ram:
         obs = retro.Observations.RAM
