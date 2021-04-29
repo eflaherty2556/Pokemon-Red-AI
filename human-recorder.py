@@ -66,7 +66,7 @@ def main():
     """ env = retro.make(game=args.game, state=args.state, inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.IMAGE, use_restricted_actions=retro.Actions.ALL, scenario=args.scenario)
     env = Discretizer(env, [['B'], [None], ['SELECT'], ['START'],  ['UP'], ['DOWN'], ['LEFT'], ['RIGHT'], ['A']])
     env = SkipLimit(env, time_between_steps=5) """
-    env = makeRetroEnv(ram=False)
+    env = makeRetroEnv()
     # ['B', None, 'SELECT', 'START', 'UP', 'DOWN', 'LEFT', 'RIGHT', 'A']
     obs = env.reset()
     screen_height, screen_width = obs.shape[:2]

@@ -28,7 +28,7 @@ def main():
     """ env = retro.make("PokemonRed-GameBoy", inttype=retro.data.Integrations.ALL, obs_type=retro.Observations.RAM, use_restricted_actions=retro.Actions.ALL) #, use_restricted_actions=retro.Actions.DISCRETE
     env = Discretizer(env)
     env = SkipLimit(env=env, time_between_steps=5) """
-    env = makeRetroEnv(ram=False)
+    env = makeRetroEnv()
     vec_env = DummyVecEnv([lambda: env])
     #vec_env = VecNormalize.load("a2c_env_stats_pkmn.pk1", vec_env)
 
